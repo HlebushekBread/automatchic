@@ -17,6 +17,16 @@ import java.util.Map;
 public class SubjectController {
     private final SubjectService subjectService;
 
+    @GetMapping("/view/{id}")
+    public Subject getSubjectViewById(@PathVariable long id) {
+        return subjectService.findById(false, id);
+    }
+
+    @GetMapping("/preview/{id}")
+    public Subject getSubjectPreviewById(@PathVariable long id) {
+        return subjectService.findById(true, id);
+    }
+
     @GetMapping("/public")
     public List<Subject> getPublicSubjects() {
         return subjectService.findAllPublic();

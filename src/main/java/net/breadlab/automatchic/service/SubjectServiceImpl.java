@@ -1,14 +1,18 @@
 package net.breadlab.automatchic.service;
 
 import lombok.RequiredArgsConstructor;
+import net.breadlab.automatchic.dto.LinkDto;
 import net.breadlab.automatchic.dto.SubjectDto;
+import net.breadlab.automatchic.dto.TaskDto;
 import net.breadlab.automatchic.model.*;
 import net.breadlab.automatchic.repository.SubjectRepository;
 import net.breadlab.automatchic.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +48,23 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<Subject> findAllByUserId(long userId) {
-        return subjectRepository.findAllByUserId(userId);
-    }
+    public Subject findById(boolean preview, long id) {
+        Subject subject = subjectRepository.findById(id).orElse(null);
 
-    @Override
-    public Subject findById(long id) {
-        return subjectRepository.findById(id).orElse(null);
+        if(subject == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Неверный ID");
+        } else {
+            if(preview) {
+                if(subject.getPublicity() != Publicity.PUBLIC && subject.getUser().getId() != getCurrentUserId()) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на предпросмотр");
+                }
+            } else {
+                if(subject.getUser().getId() != getCurrentUserId()) {
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Доступ запрещен");
+                }
+            }
+        }
+        return subject;
     }
 
     @Transactional
@@ -108,7 +122,7 @@ public class SubjectServiceImpl implements SubjectService {
 
         if (subject == null ) {
             return -1;
-        } else if (subject.getUser().getId() != getCurrentUserId() && subject.getPublicity() == Publicity.PRIVATE) {
+        } else if (subject.getPublicity() != Publicity.PUBLIC && subject.getUser().getId() != getCurrentUserId()) {
             return -2;
         }
 
@@ -136,7 +150,7 @@ public class SubjectServiceImpl implements SubjectService {
             taskCopy.setType(task.getType());
             taskCopy.setDueDate(task.getDueDate());
             taskCopy.setMaxGrade(task.getMaxGrade());
-            taskCopy.setReceivedGrade(task.getReceivedGrade());
+            taskCopy.setReceivedGrade(0);
             taskCopy.setGradeWeight(task.getGradeWeight());
 
             taskCopy.setSubject(subjectCopy);
@@ -144,6 +158,19 @@ public class SubjectServiceImpl implements SubjectService {
             tasksCopy.add(taskCopy);
         }
         subjectCopy.setTasks(tasksCopy);
+
+        List<Link> linksCopy = new ArrayList<>();
+        for (Link link : subject.getLinks()) {
+            Link linkCopy = new Link();
+
+            linkCopy.setName(link.getName());
+            linkCopy.setFullLink(link.getFullLink());
+
+            link.setSubject(subjectCopy);
+
+            linksCopy.add(linkCopy);
+        }
+        subjectCopy.setLinks(linksCopy);
 
         subjectRepository.save(subjectCopy);
 
