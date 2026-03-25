@@ -11,4 +11,5 @@ import java.util.List;
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
     List<Subject> findAllByPublicity(Publicity publicity);
     List<Subject> findAllByUserId(long userId);
+    long countByUserId(long userId);
 }

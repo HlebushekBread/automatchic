@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/tasks/delete/{id}").authenticated()
                         .requestMatchers("/api/tasks/save").authenticated()
                         .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register").permitAll()
                         .anyRequest().permitAll()
                 )
                 .authenticationProvider(getDaoAuthenticationProvider())
@@ -67,7 +68,7 @@ public class SecurityConfig {
             configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         }
 
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

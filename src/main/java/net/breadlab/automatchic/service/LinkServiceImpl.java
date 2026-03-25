@@ -1,17 +1,16 @@
 package net.breadlab.automatchic.service;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import net.breadlab.automatchic.dto.LinkDto;
 import net.breadlab.automatchic.model.Link;
 import net.breadlab.automatchic.model.Subject;
-import net.breadlab.automatchic.model.Task;
 import net.breadlab.automatchic.repository.LinkRepository;
 import net.breadlab.automatchic.repository.SubjectRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
@@ -43,9 +42,13 @@ public class LinkServiceImpl implements LinkService {
         Subject subject = subjectRepository.findById(linkDto.getSubjectId()).orElse(null);
 
         if (link == null || subject == null) {
-            return -1;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID");
+        } else if (linkDto.getId() == 0) {
+            if (linkRepository.countBySubjectId(subject.getId()) >= 10) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит ссылок");
+            }
         } else if (subject.getUser().getId() != getCurrentUserId()) {
-            return -2;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
         }
 
         link.setName(linkDto.getName());
@@ -58,16 +61,15 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Override
-    public long delete(long id) {
+    public void delete(long id) {
         Link link = linkRepository.findById(id).orElse(null);
 
         if (link == null) {
-            return -1;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID");
         } else if (link.getSubject().getUser().getId() != getCurrentUserId()) {
-            return -2;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
         }
 
         linkRepository.deleteById(id);
-        return 0;
     }
 }

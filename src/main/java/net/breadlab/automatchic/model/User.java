@@ -26,7 +26,7 @@ public class User {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "group")
+    @Column(name = "`group`")
     private String group;
 
     @Enumerated(EnumType.STRING)

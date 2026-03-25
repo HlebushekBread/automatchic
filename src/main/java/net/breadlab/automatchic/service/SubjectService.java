@@ -10,6 +10,6 @@ public interface SubjectService {
     List<Subject> findAllByCurrentUserId();
     Subject findById(boolean preview, long id);
     long save(SubjectDto subjectDto);
-    long delete(long id);
+    void delete(long id);
     long copy(long id);
 }

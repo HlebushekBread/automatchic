@@ -56,6 +56,7 @@ public class Subject {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OrderBy("position ASC")
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 

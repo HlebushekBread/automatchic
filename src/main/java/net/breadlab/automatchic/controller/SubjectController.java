@@ -51,7 +51,7 @@ public class SubjectController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable("id") long id) {
-        long response = subjectService.delete(id);
-        return new ResponseEntity<>(Map.of("id", response), HttpStatus.OK);
+        subjectService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

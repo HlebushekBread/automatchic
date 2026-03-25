@@ -1,9 +1,7 @@
 package net.breadlab.automatchic.service;
 
 import lombok.RequiredArgsConstructor;
-import net.breadlab.automatchic.dto.LinkDto;
 import net.breadlab.automatchic.dto.SubjectDto;
-import net.breadlab.automatchic.dto.TaskDto;
 import net.breadlab.automatchic.model.*;
 import net.breadlab.automatchic.repository.SubjectRepository;
 import net.breadlab.automatchic.repository.UserRepository;
@@ -52,7 +50,7 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = subjectRepository.findById(id).orElse(null);
 
         if(subject == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Неверный ID");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID");
         } else {
             if(preview) {
                 if(subject.getPublicity() != Publicity.PUBLIC && subject.getUser().getId() != getCurrentUserId()) {
@@ -70,6 +68,12 @@ public class SubjectServiceImpl implements SubjectService {
     @Transactional
     @Override
     public long save(SubjectDto subjectDto) {
+        if (subjectDto.getId() == 0) {
+            if (subjectRepository.countByUserId(getCurrentUserId()) >= 10) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит предметов");
+            }
+        }
+
         Subject subject = (subjectDto.getId() != 0)
                 ? subjectRepository.findById(subjectDto.getId()).orElse(null)
                 : new Subject();
@@ -77,9 +81,9 @@ public class SubjectServiceImpl implements SubjectService {
         User user = userRepository.findById(getCurrentUserId()).orElse(null);
 
         if (subject == null || user == null) {
-            return -1;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID");
         } else if (subjectDto.getId() != 0 && subject.getUser().getId() != getCurrentUserId()) {
-            return -2;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
         }
 
         subject.setName(subjectDto.getName());
@@ -102,28 +106,31 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Transactional
     @Override
-    public long delete(long id) {
+    public void delete(long id) {
         Subject subject = subjectRepository.findById(id).orElse(null);
 
         if (subject == null) {
-            return -1;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID");
         } else if (subject.getUser().getId() != getCurrentUserId()) {
-            return -2;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
         }
 
         subjectRepository.deleteById(id);
-        return 0;
     }
 
     @Transactional
     @Override
     public long copy(long id) {
+        if (subjectRepository.countByUserId(getCurrentUserId()) >= 10) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит предметов");
+        }
+
         Subject subject = subjectRepository.findById(id).orElse(null);
 
         if (subject == null ) {
-            return -1;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID");
         } else if (subject.getPublicity() != Publicity.PUBLIC && subject.getUser().getId() != getCurrentUserId()) {
-            return -2;
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на копирование");
         }
 
         Subject subjectCopy = new Subject();
@@ -152,6 +159,7 @@ public class SubjectServiceImpl implements SubjectService {
             taskCopy.setMaxGrade(task.getMaxGrade());
             taskCopy.setReceivedGrade(0);
             taskCopy.setGradeWeight(task.getGradeWeight());
+            taskCopy.setPosition(task.getPosition());
 
             taskCopy.setSubject(subjectCopy);
 
@@ -166,7 +174,7 @@ public class SubjectServiceImpl implements SubjectService {
             linkCopy.setName(link.getName());
             linkCopy.setFullLink(link.getFullLink());
 
-            link.setSubject(subjectCopy);
+            linkCopy.setSubject(subjectCopy);
 
             linksCopy.add(linkCopy);
         }

@@ -36,6 +36,9 @@ public class Task {
     @Column(name = "grade_weight")
     private double gradeWeight;
 
+    @Column(name = "position")
+    private int position;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "subject_id", nullable = false)

@@ -20,5 +20,6 @@ public class TaskDto {
     private double maxGrade;
     private double receivedGrade;
     private double gradeWeight;
+    private int position;
     private long subjectId;
 }

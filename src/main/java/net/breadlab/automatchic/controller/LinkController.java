@@ -23,7 +23,7 @@ public class LinkController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteTask(@PathVariable long id) {
-        long response = linkService.delete(id);
-        return ResponseEntity.ok().build();
+        linkService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
