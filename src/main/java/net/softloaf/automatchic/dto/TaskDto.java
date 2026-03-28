@@ -1,12 +1,12 @@
 package net.softloaf.automatchic.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 public class TaskDto {
     private long id;
     private String name;

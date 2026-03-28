@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/subjects/preview/{id}").permitAll()
                         .requestMatchers("/api/tasks/delete/{id}").authenticated()
                         .requestMatchers("/api/tasks/save").authenticated()
+                        .requestMatchers("/api/users/delete/{id}").authenticated()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .anyRequest().permitAll()

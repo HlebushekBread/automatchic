@@ -40,6 +40,15 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> saveNewUser(@RequestBody NewUserDto newUserDto) {
         userService.saveNewUser(newUserDto);
-        return ResponseEntity.noContent().build();
+
+        UserDetailsImpl userDetails;
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(newUserDto.getUsername(), newUserDto.getPassword()));
+            userDetails = userDetailsService.loadUserByUsername(newUserDto.getUsername());
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>("Incorrect credentials", HttpStatus.UNAUTHORIZED);
+        }
+        String token = jwtUtils.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 }
