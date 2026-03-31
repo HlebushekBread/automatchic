@@ -1,7 +1,7 @@
 package net.softloaf.automatchic.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.dto.LinkDto;
+import net.softloaf.automatchic.dto.LinkRequest;
 import net.softloaf.automatchic.service.LinkService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,8 @@ public class LinkController {
     private final LinkService linkService;
 
     @PutMapping("/save")
-    public ResponseEntity<?> saveTask(@RequestBody LinkDto linkDto) {
-        long response = linkService.save(linkDto);
+    public ResponseEntity<?> saveTask(@RequestBody LinkRequest linkRequest) {
+        long response = linkService.save(linkRequest);
         return new ResponseEntity<>(Map.of("id", response), HttpStatus.OK);
     }
 

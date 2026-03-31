@@ -1,7 +1,7 @@
 package net.softloaf.automatchic.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.dto.NewUserDto;
+import net.softloaf.automatchic.dto.NewUserRequest;
 import net.softloaf.automatchic.model.Role;
 import net.softloaf.automatchic.model.User;
 import net.softloaf.automatchic.repository.UserRepository;
@@ -19,18 +19,25 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void saveNewUser(NewUserDto newUserDto) {
+    public void saveNewUser(NewUserRequest newUserRequest) {
+        if(newUserRequest.getUsername() == null || newUserRequest.getPassword() == null) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_CONTENT, "Логин и пароль не могут быть null");
+        }
+
+        if(newUserRequest.getUsername().isEmpty() || newUserRequest.getPassword().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Логин и пароль не могут быть пустыми");
+        }
 
         User user = new User();
 
-        if (userRepository.existsByUsername(newUserDto.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь уже существует");
+        if (userRepository.existsByUsername(newUserRequest.getUsername())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь уже существует");
         }
 
-        user.setUsername(newUserDto.getUsername());
-        user.setPassword(passwordEncoder.encode(newUserDto.getPassword()));
-        user.setFullName(newUserDto.getFullName());
-        user.setGroup(newUserDto.getGroup());
+        user.setUsername(newUserRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(newUserRequest.getPassword()));
+        user.setFullName(newUserRequest.getFullName());
+        user.setGroup(newUserRequest.getGroup());
         user.setRole(Role.STUDENT);
 
         userRepository.save(user);

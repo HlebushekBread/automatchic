@@ -1,7 +1,7 @@
 package net.softloaf.automatchic.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.dto.SubjectDto;
+import net.softloaf.automatchic.dto.SubjectRequest;
 import net.softloaf.automatchic.model.*;
 import net.softloaf.automatchic.repository.SubjectRepository;
 import net.softloaf.automatchic.repository.UserRepository;
@@ -45,34 +45,34 @@ public class SubjectService {
     }
 
     @Transactional
-    public long save(SubjectDto subjectDto) {
-        if (subjectDto.getId() == 0) {
+    public long save(SubjectRequest subjectRequest) {
+        if (subjectRequest.getId() == 0) {
             if (subjectRepository.countByUserId(sessionService.getCurrentUserId()) >= 10) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит предметов");
             }
         }
 
-        Subject subject = (subjectDto.getId() != 0)
-                ? subjectRepository.findById(subjectDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"))
+        Subject subject = (subjectRequest.getId() != 0)
+                ? subjectRepository.findById(subjectRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"))
                 : new Subject();
 
         User user = userRepository.findById(sessionService.getCurrentUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
 
-        if (subjectDto.getId() != 0 && subject.getUser().getId() != sessionService.getCurrentUserId()) {
+        if (subjectRequest.getId() != 0 && subject.getUser().getId() != sessionService.getCurrentUserId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
         }
 
-        subject.setName(subjectDto.getName());
-        subject.setTeacher(subjectDto.getTeacher());
-        subject.setDescription(subjectDto.getDescription());
-        subject.setGradingType(GradingType.valueOf(subjectDto.getGradingType()));
-        subject.setGradingMax(subjectDto.getGradingMax());
-        subject.setGrading5(subjectDto.getGrading5());
-        subject.setGrading4(subjectDto.getGrading4());
-        subject.setGrading3(subjectDto.getGrading3());
-        subject.setGradingMin(subjectDto.getGradingMin());
-        subject.setTargetGrade(subjectDto.getTargetGrade());
-        subject.setPublicity(Publicity.valueOf(subjectDto.getPublicity()));
+        subject.setName(subjectRequest.getName());
+        subject.setTeacher(subjectRequest.getTeacher());
+        subject.setDescription(subjectRequest.getDescription());
+        subject.setGradingType(GradingType.valueOf(subjectRequest.getGradingType()));
+        subject.setGradingMax(subjectRequest.getGradingMax());
+        subject.setGrading5(subjectRequest.getGrading5());
+        subject.setGrading4(subjectRequest.getGrading4());
+        subject.setGrading3(subjectRequest.getGrading3());
+        subject.setGradingMin(subjectRequest.getGradingMin());
+        subject.setTargetGrade(subjectRequest.getTargetGrade());
+        subject.setPublicity(Publicity.valueOf(subjectRequest.getPublicity()));
         subject.setUser(user);
 
         subjectRepository.save(subject);
@@ -114,8 +114,8 @@ public class SubjectService {
         subjectCopy.setGrading4(subject.getGrading4());
         subjectCopy.setGrading3(subject.getGrading3());
         subjectCopy.setGradingMin(subject.getGradingMin());
-        subjectCopy.setTargetGrade(subject.getTargetGrade());
-        subjectCopy.setPublicity(subject.getPublicity());
+        subjectCopy.setTargetGrade(3);
+        subjectCopy.setPublicity(Publicity.PRIVATE);
 
         subjectCopy.setUser(userRepository.findById(sessionService.getCurrentUserId()).orElse(null));
 

@@ -1,5 +1,6 @@
 package net.softloaf.automatchic.service;
 
+import net.softloaf.automatchic.security.UserDetailsImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,11 +14,11 @@ public class SessionService {
     long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неавтороизованный запрос");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неавторизованный запрос");
         }
         try {
-            Map<String, String> principal = (Map<String, String>) authentication.getPrincipal();
-            return Long.parseLong(principal.get("id"));
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            return userDetails.getUser().getId();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка сервера");
         }

@@ -1,13 +1,9 @@
 package net.softloaf.automatchic.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
 
 @Data
-public class SubjectDto {
+public class SubjectRequest {
     private long id;
     private String name;
     private String teacher;

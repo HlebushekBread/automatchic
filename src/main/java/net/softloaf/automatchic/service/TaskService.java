@@ -1,8 +1,8 @@
 package net.softloaf.automatchic.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.dto.TaskDto;
-import net.softloaf.automatchic.dto.TaskPositionDto;
+import net.softloaf.automatchic.dto.TaskRequest;
+import net.softloaf.automatchic.dto.TaskPositionRequest;
 import net.softloaf.automatchic.model.Subject;
 import net.softloaf.automatchic.model.Task;
 import net.softloaf.automatchic.model.TaskType;
@@ -22,15 +22,15 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final SubjectRepository subjectRepository;
 
-    public long save(TaskDto taskDto) {
+    public long save(TaskRequest taskRequest) {
 
-        Task task = (taskDto.getId() != 0)
-                ? taskRepository.findById(taskDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID задачи"))
+        Task task = (taskRequest.getId() != 0)
+                ? taskRepository.findById(taskRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID задачи"))
                 : new Task();
 
-        Subject subject = subjectRepository.findById(taskDto.getSubjectId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
+        Subject subject = subjectRepository.findById(taskRequest.getSubjectId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
-        if (taskDto.getId() == 0) {
+        if (taskRequest.getId() == 0) {
             if (taskRepository.countBySubjectId(subject.getId()) >= 20) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит задач");
             }
@@ -38,13 +38,13 @@ public class TaskService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
         }
 
-        task.setName(taskDto.getName());
-        task.setType(TaskType.valueOf(taskDto.getType()));
-        task.setDueDate(taskDto.getDueDate());
-        task.setMaxGrade(taskDto.getMaxGrade());
-        task.setReceivedGrade(taskDto.getReceivedGrade());
-        task.setGradeWeight(taskDto.getGradeWeight());
-        task.setPosition(taskDto.getPosition());
+        task.setName(taskRequest.getName());
+        task.setType(TaskType.valueOf(taskRequest.getType()));
+        task.setDueDate(taskRequest.getDueDate());
+        task.setMaxGrade(taskRequest.getMaxGrade());
+        task.setReceivedGrade(taskRequest.getReceivedGrade());
+        task.setGradeWeight(taskRequest.getGradeWeight());
+        task.setPosition(taskRequest.getPosition());
         task.setSubject(subject);
 
         taskRepository.save(task);
@@ -53,8 +53,8 @@ public class TaskService {
     }
 
     @Transactional
-    public void updatePositions(List<TaskPositionDto> taskPositionDtos) {
-        for(TaskPositionDto taskPositionDto : taskPositionDtos) {
+    public void updatePositions(List<TaskPositionRequest> taskPositionDtos) {
+        for(TaskPositionRequest taskPositionDto : taskPositionDtos) {
             Task task = taskRepository.findById(taskPositionDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID задачи"));
 
             if (task.getSubject().getUser().getId() != sessionService.getCurrentUserId()) {

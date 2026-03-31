@@ -1,7 +1,7 @@
 package net.softloaf.automatchic.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.dto.LinkDto;
+import net.softloaf.automatchic.dto.LinkRequest;
 import net.softloaf.automatchic.model.Link;
 import net.softloaf.automatchic.model.Subject;
 import net.softloaf.automatchic.repository.LinkRepository;
@@ -17,14 +17,14 @@ public class LinkService {
     private final LinkRepository linkRepository;
     private final SubjectRepository subjectRepository;
 
-    public long save(LinkDto linkDto) {
-        Link link = (linkDto.getId() != 0)
-                ? linkRepository.findById(linkDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID ссылки"))
+    public long save(LinkRequest linkRequest) {
+        Link link = (linkRequest.getId() != 0)
+                ? linkRepository.findById(linkRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID ссылки"))
                 : new Link();
 
-        Subject subject = subjectRepository.findById(linkDto.getSubjectId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
+        Subject subject = subjectRepository.findById(linkRequest.getSubjectId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
-        if (linkDto.getId() == 0) {
+        if (linkRequest.getId() == 0) {
             if (linkRepository.countBySubjectId(subject.getId()) >= 10) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит ссылок");
             }
@@ -32,8 +32,8 @@ public class LinkService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
         }
 
-        link.setName(linkDto.getName());
-        link.setFullLink(linkDto.getFullLink());
+        link.setName(linkRequest.getName());
+        link.setFullLink(linkRequest.getFullLink());
         link.setSubject(subject);
 
         linkRepository.save(link);

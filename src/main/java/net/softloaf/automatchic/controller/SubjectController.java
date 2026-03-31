@@ -1,7 +1,7 @@
 package net.softloaf.automatchic.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.dto.SubjectDto;
+import net.softloaf.automatchic.dto.SubjectRequest;
 import net.softloaf.automatchic.model.Subject;
 import net.softloaf.automatchic.service.SubjectService;
 import org.springframework.http.HttpStatus;
@@ -38,12 +38,12 @@ public class SubjectController {
     }
 
     @PutMapping("/save")
-    public ResponseEntity<?> saveSubject(@RequestBody SubjectDto subjectDto) {
-        long response = subjectService.save(subjectDto);
+    public ResponseEntity<?> saveSubject(@RequestBody SubjectRequest subjectRequest) {
+        long response = subjectService.save(subjectRequest);
         return new ResponseEntity<>(Map.of("id", response), HttpStatus.OK);
     }
 
-    @PutMapping("/copy/{id}")
+    @GetMapping("/copy/{id}")
     public ResponseEntity<?> copySubject(@PathVariable long id) {
         long response = subjectService.copy(id);
         return new ResponseEntity<>(Map.of("id", response), HttpStatus.OK);

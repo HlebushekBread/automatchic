@@ -1,8 +1,8 @@
 package net.softloaf.automatchic.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.dto.TaskDto;
-import net.softloaf.automatchic.dto.TaskPositionDto;
+import net.softloaf.automatchic.dto.TaskRequest;
+import net.softloaf.automatchic.dto.TaskPositionRequest;
 import net.softloaf.automatchic.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +18,13 @@ public class TaskController {
     private final TaskService taskService;
 
     @PutMapping("/save")
-    public ResponseEntity<?> saveTask(@RequestBody TaskDto taskDto) {
-        long response = taskService.save(taskDto);
+    public ResponseEntity<?> saveTask(@RequestBody TaskRequest taskRequest) {
+        long response = taskService.save(taskRequest);
         return new ResponseEntity<>(Map.of("id", response), HttpStatus.OK);
     }
 
     @PatchMapping("/positions")
-    public ResponseEntity<?> updatePositions(@RequestBody List<TaskPositionDto> positions) {
+    public ResponseEntity<?> updatePositions(@RequestBody List<TaskPositionRequest> positions) {
         taskService.updatePositions(positions);
         return ResponseEntity.noContent().build();
     }
