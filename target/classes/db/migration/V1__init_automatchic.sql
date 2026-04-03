@@ -10,7 +10,6 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -188,15 +187,6 @@ SELECT pg_catalog.setval('public.user_id_seq', 2, true);
 
 
 --
--- TOC entry 4900 (class 2606 OID 25241)
--- Name: flyway_schema_history flyway_schema_history_pk; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.flyway_schema_history
-    ADD CONSTRAINT flyway_schema_history_pk PRIMARY KEY (installed_rank);
-
-
---
 -- TOC entry 4909 (class 2606 OID 25260)
 -- Name: link link_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
@@ -230,14 +220,6 @@ ALTER TABLE ONLY public.task
 
 ALTER TABLE ONLY public."user"
     ADD CONSTRAINT user_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 4901 (class 1259 OID 25248)
--- Name: flyway_schema_history_s_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX flyway_schema_history_s_idx ON public.flyway_schema_history USING btree (success);
 
 
 -- Completed on 2026-03-25 12:15:09

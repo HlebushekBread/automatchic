@@ -67,7 +67,7 @@ public class SecurityConfig {
         if (origins != null && !origins.isEmpty()) {
             configuration.setAllowedOrigins(Arrays.asList(origins.split(",")));
         } else {
-            configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+            configuration.setAllowedOrigins(List.of("*"));
         }
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
