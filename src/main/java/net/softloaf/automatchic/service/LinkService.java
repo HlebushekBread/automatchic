@@ -8,6 +8,7 @@ import net.softloaf.automatchic.repository.LinkRepository;
 import net.softloaf.automatchic.repository.SubjectRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class LinkService {
     private final LinkRepository linkRepository;
     private final SubjectRepository subjectRepository;
 
+    @Transactional
     public long save(LinkRequest linkRequest) {
         Link link = (linkRequest.getId() != 0)
                 ? linkRepository.findById(linkRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID ссылки"))
@@ -41,6 +43,7 @@ public class LinkService {
         return link.getId();
     }
 
+    @Transactional
     public void delete(long id) {
         Link link = linkRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID ссылки"));
 

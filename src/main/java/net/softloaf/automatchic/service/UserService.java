@@ -2,6 +2,7 @@ package net.softloaf.automatchic.service;
 
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.dto.NewUserRequest;
+import net.softloaf.automatchic.dto.UserUpdateRequest;
 import net.softloaf.automatchic.model.Role;
 import net.softloaf.automatchic.model.User;
 import net.softloaf.automatchic.repository.UserRepository;
@@ -52,5 +53,15 @@ public class UserService {
         }
 
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void updateUser(UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(sessionService.getCurrentUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неавторизованный запрос"));
+
+        user.setFullName(userUpdateRequest.getFullName());
+        user.setGroup(userUpdateRequest.getGroup());
+
+        userRepository.save(user);
     }
 }

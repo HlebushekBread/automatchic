@@ -20,16 +20,19 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<Subject> findAllPublic() {
         return subjectRepository.findAllByPublicity(Publicity.PUBLIC);
     }
 
+    @Transactional(readOnly = true)
     public List<Subject> findAllByCurrentUserId() {
         return subjectRepository.findAllByUserId(sessionService.getCurrentUserId());
     }
 
+    @Transactional(readOnly = true)
     public Subject findById(boolean preview, long id) {
-        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
         if(preview) {
             if(subject.getPublicity() != Publicity.PUBLIC && subject.getUser().getId() != sessionService.getCurrentUserId()) {

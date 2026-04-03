@@ -22,6 +22,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final SubjectRepository subjectRepository;
 
+    @Transactional
     public long save(TaskRequest taskRequest) {
 
         Task task = (taskRequest.getId() != 0)
@@ -53,15 +54,15 @@ public class TaskService {
     }
 
     @Transactional
-    public void updatePositions(List<TaskPositionRequest> taskPositionDtos) {
-        for(TaskPositionRequest taskPositionDto : taskPositionDtos) {
-            Task task = taskRepository.findById(taskPositionDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID задачи"));
+    public void updatePositions(List<TaskPositionRequest> taskPositionRequests) {
+        for(TaskPositionRequest taskPositionRequest : taskPositionRequests) {
+            Task task = taskRepository.findById(taskPositionRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID задачи"));
 
             if (task.getSubject().getUser().getId() != sessionService.getCurrentUserId()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
             }
 
-            task.setPosition(taskPositionDto.getPosition());
+            task.setPosition(taskPositionRequest.getPosition());
 
             taskRepository.save(task);
         }
