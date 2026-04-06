@@ -1,0 +1,25 @@
+<project xmlns="http://apache.org" ...>
+<parent>
+<groupId>net.softloaf</groupId>
+<artifactId>automatchic</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+</parent>
+<artifactId>common</artifactId>
+
+<dependencies>
+<!-- Для создания топиков и DTO -->
+<dependency>
+    <groupId>org.springframework.kafka</groupId>
+    <artifactId>spring-kafka</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <optional>true</optional>
+</dependency>
+</dependencies>
+        </project>

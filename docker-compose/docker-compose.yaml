@@ -1,4 +1,5 @@
 #docker-compose --env-file ../.env up --build -d
+name: automatchic
 
 services:
   app:
@@ -15,10 +16,33 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_LIFETIME=${JWT_LIFETIME}
+      - BROKER_URL=kafka:9092
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - REDIS_TIMEOUT=60000
+      - FRONTEND_URL=http://softloaf.net
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     restart: always
+
+  notification:
+    container_name: notification-service
+    build:
+      context: ..
+      dockerfile: notification-service/Dockerfile
+    environment:
+      - BROKER_URL=kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+    restart: always
+
   db:
     container_name: postgres-db
     image: postgres:15-alpine
@@ -35,5 +59,31 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    container_name: redis-cache
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redisdata:/data
+
+  kafka:
+    container_name: kafka-broker
+    image: confluentinc/cp-kafka:7.4.0
+    environment:
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
 volumes:
   pgdata:
+  redisdata:
