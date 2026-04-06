@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
     private final SessionService sessionService;
     private final UserService userService;
@@ -21,8 +21,8 @@ public class UserController {
     private final JwtUtils jwtUtils;
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUser() {
-        this.userService.deleteUser(sessionService.getCurrentUserId());
+    public ResponseEntity<?> deleteUser(@PathVariable long id) {
+        this.userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 

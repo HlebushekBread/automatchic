@@ -12,16 +12,21 @@
     <artifactId>notification-service</artifactId>
 
     <dependencies>
+        <!-- Common module -->
+        <dependency>
+            <groupId>net.softloaf</groupId>
+            <artifactId>common-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!-- Почта -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-
         <!-- Kafka (для получения сообщений) -->
         <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-kafka</artifactId>
         </dependency>
 
         <!-- Для обработки JSON в сообщениях Kafka -->

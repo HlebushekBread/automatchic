@@ -16,8 +16,10 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class UserService {
     private final SessionService sessionService;
+    private final RegistrationTokenService tokenService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationProducer notificationProducer;
 
     @Transactional
     public void saveNewUser(NewUserRequest newUserRequest) {
@@ -42,6 +44,8 @@ public class UserService {
         user.setRole(Role.STUDENT);
 
         userRepository.save(user);
+
+        notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
     }
 
     @Transactional
@@ -63,5 +67,16 @@ public class UserService {
         user.setGroup(userUpdateRequest.getGroup());
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void enableUser(String token) {
+        String username = tokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        tokenService.deleteToken(token);
     }
 }

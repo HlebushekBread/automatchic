@@ -11,7 +11,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/links")
+@RequestMapping("/api/v1/links")
 public class LinkController {
     private final LinkService linkService;
 

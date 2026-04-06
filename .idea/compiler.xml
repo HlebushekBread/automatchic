@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="notification-service" />
+        <module name="common-module" />
         <module name="app-service" />
       </profile>
     </annotationProcessing>
@@ -16,6 +17,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="app-service" options="-parameters" />
       <module name="automatchic" options="" />
+      <module name="common-module" options="-parameters" />
       <module name="notification-service" options="-parameters" />
     </option>
   </component>

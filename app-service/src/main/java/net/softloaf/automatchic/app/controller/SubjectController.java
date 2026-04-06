@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/subjects")
+@RequestMapping("/api/v1/subjects")
 public class SubjectController {
     private final SubjectService subjectService;
 
@@ -50,7 +50,7 @@ public class SubjectController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable("id") long id) {
+    public ResponseEntity<?> deleteOrder(@PathVariable long id) {
         subjectService.delete(id);
         return ResponseEntity.noContent().build();
     }
