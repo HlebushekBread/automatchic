@@ -38,6 +38,10 @@ services:
       dockerfile: notification-service/Dockerfile
     environment:
       - BROKER_URL=kafka:9092
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_PORT=${MAIL_PORT}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
     depends_on:
       kafka:
         condition: service_started
