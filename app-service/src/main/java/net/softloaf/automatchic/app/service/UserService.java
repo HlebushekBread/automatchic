@@ -45,17 +45,15 @@ public class UserService {
 
         userRepository.save(user);
 
-        notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
+        sendConfirmationEmail(user.getId());
     }
 
-    /*
     @Transactional(readOnly = true)
     public void sendConfirmationEmail(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
 
         notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
     }
-    */
 
     @Transactional
     public void deleteUser(long id) {
