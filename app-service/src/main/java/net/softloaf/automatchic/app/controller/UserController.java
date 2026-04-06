@@ -22,21 +22,26 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
-        this.userService.deleteUser(id);
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete/self")
     public ResponseEntity<?> deleteSelf() {
-        this.userService.deleteUser(sessionService.getCurrentUserId());
+        userService.deleteUser(sessionService.getCurrentUserId());
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/update/self")
     public ResponseEntity<?> updateSelf(@RequestBody UserUpdateRequest userUpdateRequest) {
-        this.userService.updateUser(userUpdateRequest);
+        userService.updateUser(userUpdateRequest);
         UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(sessionService.getCurrentUserUsername());
         String token = jwtUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @GetMapping("/check/self")
+    public boolean checkEnabledSelf() {
+        return userService.checkEnabled(sessionService.getCurrentUserId());
     }
 }

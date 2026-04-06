@@ -48,6 +48,15 @@ public class UserService {
         notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
     }
 
+    /*
+    @Transactional(readOnly = true)
+    public void sendConfirmationEmail(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+
+        notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
+    }
+    */
+
     @Transactional
     public void deleteUser(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
@@ -78,5 +87,12 @@ public class UserService {
         userRepository.save(user);
 
         tokenService.deleteToken(token);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkEnabled(long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+
+        return user.isEnabled();
     }
 }

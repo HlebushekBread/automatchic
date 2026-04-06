@@ -35,6 +35,7 @@ public class User {
     @Column(name = "role")
     private Role role;
 
+    @JsonIgnore
     @Column(name = "is_enabled")
     private boolean isEnabled;
 

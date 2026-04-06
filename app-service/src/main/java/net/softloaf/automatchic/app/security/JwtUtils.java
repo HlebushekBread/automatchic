@@ -27,7 +27,6 @@ public class JwtUtils {
         claims.put("fullName", userDetails.getUser().getFullName());
         claims.put("group", userDetails.getUser().getGroup());
         claims.put("authorities", authoritiesList);
-        claims.put("isEnabled", userDetails.getUser().isEnabled());
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claims(claims)
@@ -63,9 +62,5 @@ public class JwtUtils {
 
     public List<String> getAuthoritiesFromToken(String token) {
         return getAllClaimsFromToken(token).get("authorities", List.class);
-    }
-
-    public boolean isEnabledFromToken(String token) {
-        return getAllClaimsFromToken(token).get("isEnabled", Boolean.class);
     }
 }
