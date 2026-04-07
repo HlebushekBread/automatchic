@@ -16,7 +16,7 @@ public class SessionService {
         }
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            return userDetails.getUser().getId();
+            return userDetails.getUserDto().getId();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка сервера");
         }
@@ -29,7 +29,7 @@ public class SessionService {
         }
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            return userDetails.getUser().getUsername();
+            return userDetails.getUserDto().getUsername();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка сервера");
         }

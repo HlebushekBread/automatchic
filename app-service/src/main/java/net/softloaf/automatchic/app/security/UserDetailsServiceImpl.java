@@ -1,6 +1,7 @@
 package net.softloaf.automatchic.app.security;
 
 import lombok.RequiredArgsConstructor;
+import net.softloaf.automatchic.app.dto.UserDto;
 import net.softloaf.automatchic.app.model.User;
 import net.softloaf.automatchic.app.repository.UserRepository;
 import org.jspecify.annotations.NonNull;
@@ -20,6 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetailsImpl loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователя не существует"));
-        return new UserDetailsImpl(user);
+        return new UserDetailsImpl(new UserDto(user));
     }
 }
