@@ -18,7 +18,8 @@ public class SessionService {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             return userDetails.getUser().getId();
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка сервера");
+            //throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка сервера");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неавторизованный запрос");
         }
     }
 
@@ -31,7 +32,8 @@ public class SessionService {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             return userDetails.getUser().getUsername();
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка сервера");
+            //throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка сервера");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Неавторизованный запрос");
         }
     }
 }

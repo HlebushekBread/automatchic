@@ -12,13 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-
 @RequiredArgsConstructor
 @Service
 public class UserService {
     private final SessionService sessionService;
-    private final RegistrationTokenService tokenService;
+    private final EmailConfirmationTokenService emailConfirmationTokenService;
+    private final PasswordResetTokenService passwordResetTokenService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final NotificationProducer notificationProducer;
@@ -58,7 +57,14 @@ public class UserService {
         if(user.isConfirmed()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь уже подтвержден");
         }
-        notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
+        notificationProducer.sendEmailConfirmationEmail(user.getUsername(), emailConfirmationTokenService.generateToken(user.getUsername()));
+    }
+
+    @Transactional(readOnly = true)
+    public void sendPasswordResetEmail(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+
+        notificationProducer.sendPasswordResetEmail(user.getUsername(), passwordResetTokenService.generateToken(user.getUsername()));
     }
 
     @Transactional
@@ -82,21 +88,32 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Transactional
-    public void confirmUser(String token) {
-        String username = tokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
-
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
-        user.setConfirmed(true);
-        userRepository.save(user);
-
-        tokenService.deleteToken(token);
-    }
-
     @Transactional(readOnly = true)
     public boolean checkEnabled(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
 
         return user.isConfirmed();
+    }
+
+    @Transactional
+    public void confirmUser(String token) {
+        String username = emailConfirmationTokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
+        user.setConfirmed(true);
+        userRepository.save(user);
+
+        emailConfirmationTokenService.deleteToken(token);
+    }
+
+    @Transactional
+    public void resetPassword(String token, String password) {
+        String username = passwordResetTokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
+        passwordResetTokenService.deleteToken(token);
     }
 }

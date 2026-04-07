@@ -17,7 +17,7 @@ public class EmailConfirmationTokenService {
     private final StringRedisTemplate redisTemplate;
 
     private static final String TOKEN_PREFIX = "confirm_token:";
-    private static final String COOLDOWN_PREFIX = "token_cooldown:";
+    private static final String COOLDOWN_PREFIX = "confirm_cooldown:";
     private static final long TOKEN_TTL = 60;
     private static final long COOLDOWN_TTL = 3;
 

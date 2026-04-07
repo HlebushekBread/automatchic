@@ -18,35 +18,46 @@ import org.springframework.stereotype.Service;
 public class NotificationConsumer {
     private final JavaMailSender mailSender;
 
-    @KafkaListener(topics = KafkaConfig.NOTIFICATION_TOPIC, groupId = "${spring.application.name}-group")
-    public void consume(EmailNotificationEvent event) {
-        log.info("Отправка письма на: {} | ссылка: {}", event.getEmail(), event.getLink());
+    @KafkaListener(topics = KafkaConfig.EMAIL_CONFIRMATION_TOPIC, groupId = "${spring.application.name}-group")
+    public void consumeEmailConfirmation(EmailNotificationEvent event) {
+        String html = String.format(
+                "<h3>Добро пожаловать!</h3>" +
+                        "<h4>Подтверждение почты для сайта softloaf.net</h4>" +
+                        "<p>Для подтверждения регистрации нажмите на кнопку ниже:</p>" +
+                        "<a href='%s' style='background: #373A40; color: white; padding: 10px 20px; text-decoration: none;'>Подтвердить почту</a>" +
+                        "<p>Если вы не регистрировались, игнорируйте это письмо.</p>",
+                event.getLink());
 
+        sendHtmlEmail(event.getEmail(), event.getSubject(), html);
+    }
+
+    @KafkaListener(topics = KafkaConfig.PASSWORD_RESET_TOPIC, groupId = "${spring.application.name}-group")
+    public void consumePasswordReset(EmailNotificationEvent event) {
+        String html = String.format(
+                "<h3>Сброс пароля</h3>" +
+                        "<h4>Сброс пароля учетной записи на softloaf.net</h4>" +
+                        "<p>Для сброса пароля нажмите на кнопку ниже:</p>" +
+                        "<a href='%s' style='background: #373A40; color: white; padding: 10px 20px; text-decoration: none;'>Сбросить пароль</a>" +
+                        "<p>Если вы не меняли пароль, игнорируйте это письмо.</p>",
+                event.getLink());
+
+        sendHtmlEmail(event.getEmail(), event.getSubject(), html);
+    }
+
+    private void sendHtmlEmail(String to, String subject, String htmlContent) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setTo(event.getEmail());
-            helper.setSubject(event.getSubject());
-
-            String htmlContent = String.format(
-                    "<h3>Добро пожаловать!</h3>" +
-                            "<h4>Подтверждение почты для сайта softloaf.net</h4>" +
-                            "<p>Для подтверждения регистрации нажмите на кнопку ниже:</p>" +
-                            "<a href='%s' style='background: #373A40; color: white; padding: 10px 20px; text-decoration: none;'>Подтвердить почту</a>" +
-                            "<p>Если вы не регистрировались, игнорируйте это письмо.</p>",
-                    event.getLink()
-            );
-
+            helper.setFrom("no-reply@softloaf.net");
+            helper.setTo(to);
+            helper.setSubject(subject);
             helper.setText(htmlContent, true);
 
             mailSender.send(message);
-            log.info("Письмо успешно отправлено на {}", event.getEmail());
-
-        } catch (MessagingException e) {
-            log.error("Ошибка при формировании письма: {}", e.getMessage());
+            log.info("Письмо ({}) успешно отправлено на {}", subject, to);
         } catch (Exception e) {
-            log.error("Не удалось отправить письмо: {}", e.getMessage());
+            log.error("Ошибка при отправке письма ({}): {}", subject, e.getMessage());
         }
     }
 }
