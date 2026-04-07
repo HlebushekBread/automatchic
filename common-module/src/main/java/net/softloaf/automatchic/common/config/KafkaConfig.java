@@ -8,11 +8,12 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaConfig {
 
-    public static final String NOTIFICATION_TOPIC = "notification-topic";
+    public static final String EMAIL_CONFIRMATION_TOPIC = "email-confirmation-topic";
+    public static final String PASSWORD_RESET_TOPIC = "password-reset-topic";
 
     @Bean
     public NewTopic notificationTopic() {
-        return TopicBuilder.name(NOTIFICATION_TOPIC)
+        return TopicBuilder.name(EMAIL_CONFIRMATION_TOPIC)
                 .partitions(3)
                 .replicas(1)
                 .build();

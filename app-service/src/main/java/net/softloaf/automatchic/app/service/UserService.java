@@ -7,7 +7,11 @@ import net.softloaf.automatchic.app.model.Role;
 import net.softloaf.automatchic.app.model.User;
 import net.softloaf.automatchic.app.repository.UserRepository;
 import net.softloaf.automatchic.app.service.producer.NotificationProducer;
+import net.softloaf.automatchic.app.service.token.EmailConfirmationTokenService;
+import net.softloaf.automatchic.app.service.token.PasswordResetTokenService;
 import net.softloaf.automatchic.app.service.util.SessionService;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,10 +22,12 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class UserService {
     private final SessionService sessionService;
-    private final RegistrationTokenService tokenService;
+    private final EmailConfirmationTokenService emailConfirmationTokenService;
+    private final PasswordResetTokenService passwordResetTokenService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final NotificationProducer notificationProducer;
+    private final CacheManager cacheManager;
 
     @Transactional
     public void saveNewUser(NewUserRequest newUserRequest) {
@@ -58,7 +64,14 @@ public class UserService {
         if(user.isConfirmed()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь уже подтвержден");
         }
-        notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
+        notificationProducer.sendEmailConfirmationEmail(user.getUsername(), emailConfirmationTokenService.generateToken(user.getUsername()));
+    }
+
+    @Transactional(readOnly = true)
+    public void sendPasswordResetEmail(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+
+        notificationProducer.sendPasswordResetEmail(user.getUsername(), passwordResetTokenService.generateToken(user.getUsername()));
     }
 
     @Transactional
@@ -70,6 +83,11 @@ public class UserService {
         }
 
         userRepository.deleteById(id);
+
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(user.getUsername());
+        }
     }
 
     @Transactional
@@ -80,17 +98,11 @@ public class UserService {
         user.setGroup(userUpdateRequest.getGroup());
 
         userRepository.save(user);
-    }
 
-    @Transactional
-    public void confirmUser(String token) {
-        String username = tokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
-
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
-        user.setConfirmed(true);
-        userRepository.save(user);
-
-        tokenService.deleteToken(token);
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(user.getUsername());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -98,5 +110,37 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
 
         return user.isConfirmed();
+    }
+
+    @Transactional
+    public void confirmUser(String token) {
+        String username = emailConfirmationTokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
+        user.setConfirmed(true);
+        userRepository.save(user);
+
+        emailConfirmationTokenService.deleteToken(token);
+
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(username);
+        }
+    }
+
+    @Transactional
+    public void resetPassword(String token, String password) {
+        String username = passwordResetTokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+
+        passwordResetTokenService.deleteToken(token);
+
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(username);
+        }
     }
 }

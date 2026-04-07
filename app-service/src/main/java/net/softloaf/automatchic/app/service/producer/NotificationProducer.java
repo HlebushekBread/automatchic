@@ -15,13 +15,23 @@ public class NotificationProducer {
     @Value("${frontend.url}")
     private String frontendUrl;
 
-    public void sendRegistrationEmail(String email, String token) {
+    public void sendEmailConfirmationEmail(String email, String token) {
         EmailNotificationEvent event = EmailNotificationEvent.builder()
                 .email(email)
                 .subject("Подтверждение регистрации")
                 .link(frontendUrl + "/confirm?token=" + token)
                 .build();
 
-        kafkaTemplate.send(KafkaConfig.NOTIFICATION_TOPIC, event);
+        kafkaTemplate.send(KafkaConfig.EMAIL_CONFIRMATION_TOPIC, event);
+    }
+
+    public void sendPasswordResetEmail(String email, String token) {
+        EmailNotificationEvent event = EmailNotificationEvent.builder()
+                .email(email)
+                .subject("Сброс пароля")
+                .link(frontendUrl + "/reset?token=" + token)
+                .build();
+
+        kafkaTemplate.send(KafkaConfig.PASSWORD_RESET_TOPIC, event);
     }
 }

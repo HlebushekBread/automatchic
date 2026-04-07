@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.app.dto.JwtRequest;
 import net.softloaf.automatchic.app.dto.JwtResponse;
 import net.softloaf.automatchic.app.dto.NewUserRequest;
+import net.softloaf.automatchic.app.dto.ResetPasswordRequest;
 import net.softloaf.automatchic.app.security.JwtUtils;
 import net.softloaf.automatchic.app.security.UserDetailsImpl;
 import net.softloaf.automatchic.app.security.UserDetailsServiceImpl;
-import net.softloaf.automatchic.app.service.util.SessionService;
 import net.softloaf.automatchic.app.service.UserService;
+import net.softloaf.automatchic.app.service.util.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -55,15 +56,27 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @GetMapping("/confirm/{token}")
-    public ResponseEntity<?> confirmEmail(@PathVariable String token) {
+    @GetMapping("/resend")
+    public ResponseEntity<?> resendConfirm() {
+        userService.sendConfirmationEmail(sessionService.getCurrentUserId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirmEmail(@RequestBody String token) {
         userService.confirmUser(token);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/resend")
-    public ResponseEntity<?> resendConfirm() {
-        userService.sendConfirmationEmail(sessionService.getCurrentUserId());
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody String username) {
+        userService.sendPasswordResetEmail(username);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        userService.resetPassword(resetPasswordRequest.getToken(), resetPasswordRequest.getPassword());
         return ResponseEntity.noContent().build();
     }
 }
