@@ -1,6 +1,8 @@
 package net.softloaf.automatchic.app.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.app.dto.UserDto;
 import net.softloaf.automatchic.app.model.User;
@@ -16,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails, Serializable {
     @Serial
@@ -23,6 +26,7 @@ public class UserDetailsImpl implements UserDetails, Serializable {
 
     private final UserDto userDto;
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -30,31 +34,37 @@ public class UserDetailsImpl implements UserDetails, Serializable {
         return grantedAuthorities;
     }
 
+    @JsonIgnore
     @Override
     public @Nullable String getPassword() {
         return userDto.getPassword();
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return userDto.getUsername();
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
