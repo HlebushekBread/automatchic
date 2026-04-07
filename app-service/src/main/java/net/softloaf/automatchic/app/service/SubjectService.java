@@ -5,6 +5,7 @@ import net.softloaf.automatchic.app.dto.SubjectRequest;
 import net.softloaf.automatchic.app.model.*;
 import net.softloaf.automatchic.app.repository.SubjectRepository;
 import net.softloaf.automatchic.app.repository.UserRepository;
+import net.softloaf.automatchic.app.service.util.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

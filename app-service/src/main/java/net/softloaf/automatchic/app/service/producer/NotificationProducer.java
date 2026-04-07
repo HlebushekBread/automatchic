@@ -1,4 +1,4 @@
-package net.softloaf.automatchic.app.service;
+package net.softloaf.automatchic.app.service.producer;
 
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.common.config.KafkaConfig;

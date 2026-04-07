@@ -1,4 +1,4 @@
-package net.softloaf.automatchic.app.service;
+package net.softloaf.automatchic.app.service.util;
 
 
 import lombok.RequiredArgsConstructor;
