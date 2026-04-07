@@ -45,7 +45,7 @@ public class UserService {
         user.setGroup(newUserRequest.getGroup());
         user.setRole(Role.STUDENT);
 
-        user.setEnabled(false);
+        user.setConfirmed(false);
 
         userRepository.save(user);
 
@@ -55,7 +55,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public void sendConfirmationEmail(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
-        if(user.isEnabled()) {
+        if(user.isConfirmed()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь уже подтвержден");
         }
         notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
@@ -83,11 +83,11 @@ public class UserService {
     }
 
     @Transactional
-    public void enableUser(String token) {
+    public void confirmUser(String token) {
         String username = tokenService.getEmailByToken(token).orElseThrow(() -> new ResponseStatusException(HttpStatus.GONE, "Невалидный токен"));
 
         User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный Username"));
-        user.setEnabled(true);
+        user.setConfirmed(true);
         userRepository.save(user);
 
         tokenService.deleteToken(token);
@@ -97,6 +97,6 @@ public class UserService {
     public boolean checkEnabled(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
 
-        return user.isEnabled();
+        return user.isConfirmed();
     }
 }

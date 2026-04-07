@@ -40,8 +40,8 @@ public class User {
     private Role role;
 
     @JsonIgnore
-    @Column(name = "is_enabled")
-    private boolean isEnabled;
+    @Column(name = "is_confirmed")
+    private boolean isConfirmed;
 
     @JsonIgnore
     @CreatedDate

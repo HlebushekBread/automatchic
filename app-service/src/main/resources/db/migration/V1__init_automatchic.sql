@@ -134,7 +134,7 @@ CREATE TABLE public."user" (
     "group" character varying DEFAULT ''::character varying,
     role character varying DEFAULT 'STUDENT'::character varying NOT NULL,
     registered_at timestamp without time zone NOT NULL,
-    is_enabled boolean DEFAULT false NOT NULL
+    is_confirmed boolean DEFAULT false NOT NULL
 );
 
 

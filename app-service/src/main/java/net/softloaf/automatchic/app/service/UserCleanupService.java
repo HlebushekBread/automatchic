@@ -23,7 +23,7 @@ public class UserCleanupService {
         log.info("Запуск очистки базы...");
         LocalDateTime cutoff = LocalDateTime.now().minusDays(1);
 
-        int deletedCount = userRepository.deleteByIsEnabledFalseAndRegisteredAtBefore(cutoff);
+        int deletedCount = userRepository.deleteByIsConfirmedFalseAndRegisteredAtBefore(cutoff);
 
         if (deletedCount > 0) {
             log.info("Удалено неподтвержденных аккаунтов: {}", deletedCount);

@@ -58,7 +58,7 @@ public class AuthController {
 
     @GetMapping("/confirm/{token}")
     public ResponseEntity<?> confirmEmail(@PathVariable String token) {
-        userService.enableUser(token);
+        userService.confirmUser(token);
         return ResponseEntity.noContent().build();
     }
 

@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/check/self")
-    public boolean checkEnabledSelf() {
+    public boolean checkConfirmedSelf() {
         return userService.checkEnabled(sessionService.getCurrentUserId());
     }
 }
