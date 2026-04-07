@@ -12,8 +12,16 @@ public class KafkaConfig {
     public static final String PASSWORD_RESET_TOPIC = "password-reset-topic";
 
     @Bean
-    public NewTopic notificationTopic() {
+    public NewTopic emailConfirmationTopic() {
         return TopicBuilder.name(EMAIL_CONFIRMATION_TOPIC)
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    public NewTopic passwordResetTopic() {
+        return TopicBuilder.name(PASSWORD_RESET_TOPIC)
                 .partitions(3)
                 .replicas(1)
                 .build();
