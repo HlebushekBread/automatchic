@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         String input = e.getMessage();
 
         int status = 500;
-        String message = "Внутренняя ошибка аутентификации";
+        String message = e.getMessage();
 
         if (input != null && !input.isEmpty()) {
             Pattern pattern = Pattern.compile("^(\\d+).*?\"(.+)\"$");
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
-        ErrorResponse error = new ErrorResponse(500, "Внутренняя ошибка сервера");
+        ErrorResponse error = new ErrorResponse(500, e.getMessage());
         return ResponseEntity.internalServerError().body(error);
     }
 }
