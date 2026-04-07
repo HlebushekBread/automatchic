@@ -1,5 +1,6 @@
 package net.softloaf.automatchic.app.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import net.softloaf.automatchic.app.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -29,7 +31,7 @@ public class GlobalExceptionHandler {
         String input = e.getMessage();
 
         int status = 500;
-        String message = e.getMessage();
+        String message = "Внутренняя ошибка аутентификации";
 
         if (input != null && !input.isEmpty()) {
             Pattern pattern = Pattern.compile("^(\\d+).*?\"(.+)\"$");
@@ -53,7 +55,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
-        ErrorResponse error = new ErrorResponse(500, e.getMessage());
+        ErrorResponse error = new ErrorResponse(500, "Внутренняя ошибка сервера");
+        log.error(e.getMessage());
         return ResponseEntity.internalServerError().body(error);
     }
 }

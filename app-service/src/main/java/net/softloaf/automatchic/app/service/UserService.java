@@ -7,7 +7,11 @@ import net.softloaf.automatchic.app.model.Role;
 import net.softloaf.automatchic.app.model.User;
 import net.softloaf.automatchic.app.repository.UserRepository;
 import net.softloaf.automatchic.app.service.producer.NotificationProducer;
+import net.softloaf.automatchic.app.service.token.EmailConfirmationTokenService;
+import net.softloaf.automatchic.app.service.token.PasswordResetTokenService;
 import net.softloaf.automatchic.app.service.util.SessionService;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final NotificationProducer notificationProducer;
+    private final CacheManager cacheManager;
 
     @Transactional
     public void saveNewUser(NewUserRequest newUserRequest) {
@@ -78,6 +83,11 @@ public class UserService {
         }
 
         userRepository.deleteById(id);
+
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(user.getUsername());
+        }
     }
 
     @Transactional
@@ -88,6 +98,11 @@ public class UserService {
         user.setGroup(userUpdateRequest.getGroup());
 
         userRepository.save(user);
+
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(user.getUsername());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -106,6 +121,11 @@ public class UserService {
         userRepository.save(user);
 
         emailConfirmationTokenService.deleteToken(token);
+
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(username);
+        }
     }
 
     @Transactional
@@ -117,5 +137,10 @@ public class UserService {
         userRepository.save(user);
 
         passwordResetTokenService.deleteToken(token);
+
+        Cache cache = cacheManager.getCache("user_details");
+        if (cache != null) {
+            cache.evict(username);
+        }
     }
 }

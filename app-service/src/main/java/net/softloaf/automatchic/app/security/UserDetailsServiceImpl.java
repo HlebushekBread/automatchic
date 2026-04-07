@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Cacheable(value = "user_details", key = "#username")
     @Override
     public UserDetailsImpl loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        log.info("Cache miss. Загрузка из БД: {}", username);
+        //log.info("Cache miss. Загрузка из БД: {}", username);
         User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователя не существует"));
         return new UserDetailsImpl(new UserDto(user));
     }

@@ -11,8 +11,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class EmailConfirmationTokenService {
     private final StringRedisTemplate redisTemplate;
 
