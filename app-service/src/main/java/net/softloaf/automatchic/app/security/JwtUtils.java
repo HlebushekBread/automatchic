@@ -23,9 +23,9 @@ public class JwtUtils {
     public String generateToken(UserDetailsImpl userDetails) {
         Map<String, Object> claims = new HashMap<>();
         List<String> authoritiesList = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        claims.put("id", String.valueOf(userDetails.getUser().getId()));
-        claims.put("fullName", userDetails.getUser().getFullName());
-        claims.put("group", userDetails.getUser().getGroup());
+        claims.put("id", String.valueOf(userDetails.getUserDto().getId()));
+        claims.put("fullName", userDetails.getUserDto().getFullName());
+        claims.put("group", userDetails.getUserDto().getGroup());
         claims.put("authorities", authoritiesList);
         return Jwts.builder()
                 .subject(userDetails.getUsername())
