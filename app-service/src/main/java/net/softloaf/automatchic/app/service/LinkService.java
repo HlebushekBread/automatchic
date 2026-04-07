@@ -6,6 +6,7 @@ import net.softloaf.automatchic.app.model.Link;
 import net.softloaf.automatchic.app.model.Subject;
 import net.softloaf.automatchic.app.repository.LinkRepository;
 import net.softloaf.automatchic.app.repository.SubjectRepository;
+import net.softloaf.automatchic.app.service.util.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -22,6 +22,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+    private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
 
@@ -45,10 +46,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if(username != null && jwt != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователя не существует"));
-
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    new UserDetailsImpl(user),
+                    userDetailsService.loadUserByUsername(username),
                     null,
                     jwtUtils.getAuthoritiesFromToken(jwt).stream().map(SimpleGrantedAuthority::new).toList()
             );

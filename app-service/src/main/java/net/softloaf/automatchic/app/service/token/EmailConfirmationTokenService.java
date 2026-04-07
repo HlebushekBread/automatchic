@@ -1,4 +1,4 @@
-package net.softloaf.automatchic.app.service;
+package net.softloaf.automatchic.app.service.token;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

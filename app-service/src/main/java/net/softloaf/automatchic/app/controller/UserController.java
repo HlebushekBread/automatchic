@@ -6,7 +6,7 @@ import net.softloaf.automatchic.app.dto.UserUpdateRequest;
 import net.softloaf.automatchic.app.security.JwtUtils;
 import net.softloaf.automatchic.app.security.UserDetailsImpl;
 import net.softloaf.automatchic.app.security.UserDetailsServiceImpl;
-import net.softloaf.automatchic.app.service.SessionService;
+import net.softloaf.automatchic.app.service.util.SessionService;
 import net.softloaf.automatchic.app.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -6,6 +6,8 @@ import net.softloaf.automatchic.app.dto.UserUpdateRequest;
 import net.softloaf.automatchic.app.model.Role;
 import net.softloaf.automatchic.app.model.User;
 import net.softloaf.automatchic.app.repository.UserRepository;
+import net.softloaf.automatchic.app.service.producer.NotificationProducer;
+import net.softloaf.automatchic.app.service.util.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
