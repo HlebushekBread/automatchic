@@ -133,6 +133,7 @@ CREATE TABLE public."user" (
     full_name character varying DEFAULT ''::character varying,
     "group" character varying DEFAULT ''::character varying,
     role character varying DEFAULT 'STUDENT'::character varying NOT NULL,
+    registered_at timestamp without time zone NOT NULL,
     is_enabled boolean DEFAULT false NOT NULL
 );
 

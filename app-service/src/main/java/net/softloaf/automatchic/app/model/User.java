@@ -3,7 +3,10 @@ package net.softloaf.automatchic.app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -11,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "`user`")
 public class User {
     @Id
@@ -18,7 +22,7 @@ public class User {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @JsonIgnore
@@ -38,6 +42,11 @@ public class User {
     @JsonIgnore
     @Column(name = "is_enabled")
     private boolean isEnabled;
+
+    @JsonIgnore
+    @CreatedDate
+    @Column(name = "registered_at")
+    private LocalDateTime registeredAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

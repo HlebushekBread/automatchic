@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -42,6 +44,8 @@ public class UserService {
         user.setFullName(newUserRequest.getFullName());
         user.setGroup(newUserRequest.getGroup());
         user.setRole(Role.STUDENT);
+
+        user.setEnabled(false);
 
         userRepository.save(user);
 
