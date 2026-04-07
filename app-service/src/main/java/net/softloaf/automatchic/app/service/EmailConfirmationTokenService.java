@@ -1,7 +1,6 @@
 package net.softloaf.automatchic.app.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
-public class RegistrationTokenService {
+public class EmailConfirmationTokenService {
     private final StringRedisTemplate redisTemplate;
 
     private static final String TOKEN_PREFIX = "confirm_token:";
