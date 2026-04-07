@@ -31,7 +31,7 @@ public class RegistrationTokenService {
             long seconds = remainingTtl % 60;
             String timeLeft = String.format("%02d:%02d", minutes, seconds);
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Повторная отправка возможна через: " + timeLeft);
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Повторная отправка возможна через: " + timeLeft);
         }
 
         String token = UUID.randomUUID().toString();

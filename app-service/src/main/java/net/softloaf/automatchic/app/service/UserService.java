@@ -52,7 +52,7 @@ public class UserService {
     public void sendConfirmationEmail(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
         if(user.isEnabled()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь уже подтвержден");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь уже подтвержден");
         }
         notificationProducer.sendRegistrationEmail(user.getUsername(), tokenService.generateToken(user.getUsername()));
     }
