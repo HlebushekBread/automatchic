@@ -1,8 +1,8 @@
 package net.softloaf.automatchic.app.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.JwtResponse;
-import net.softloaf.automatchic.app.dto.UserUpdateRequest;
+import net.softloaf.automatchic.app.dto.response.JwtResponse;
+import net.softloaf.automatchic.app.dto.request.UserUpdateRequest;
 import net.softloaf.automatchic.app.security.JwtUtils;
 import net.softloaf.automatchic.app.security.UserDetailsImpl;
 import net.softloaf.automatchic.app.security.UserDetailsServiceImpl;
@@ -42,6 +42,6 @@ public class UserController {
 
     @GetMapping("/check/self")
     public boolean checkConfirmedSelf() {
-        return userService.checkEnabled(sessionService.getCurrentUserId());
+        return userService.checkConfirmed(sessionService.getCurrentUserId());
     }
 }

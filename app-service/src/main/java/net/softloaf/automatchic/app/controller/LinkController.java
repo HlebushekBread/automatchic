@@ -1,7 +1,7 @@
 package net.softloaf.automatchic.app.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.LinkRequest;
+import net.softloaf.automatchic.app.dto.request.LinkRequest;
 import net.softloaf.automatchic.app.service.LinkService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

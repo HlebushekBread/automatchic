@@ -1,8 +1,8 @@
 package net.softloaf.automatchic.app.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.TaskRequest;
-import net.softloaf.automatchic.app.dto.TaskPositionRequest;
+import net.softloaf.automatchic.app.dto.request.TaskRequest;
+import net.softloaf.automatchic.app.dto.request.TaskPositionRequest;
 import net.softloaf.automatchic.app.model.Subject;
 import net.softloaf.automatchic.app.model.Task;
 import net.softloaf.automatchic.app.model.TaskType;

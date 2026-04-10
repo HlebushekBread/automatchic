@@ -1,10 +1,10 @@
 package net.softloaf.automatchic.app.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.JwtRequest;
-import net.softloaf.automatchic.app.dto.JwtResponse;
-import net.softloaf.automatchic.app.dto.NewUserRequest;
-import net.softloaf.automatchic.app.dto.ResetPasswordRequest;
+import net.softloaf.automatchic.app.dto.request.AuthRequest;
+import net.softloaf.automatchic.app.dto.response.JwtResponse;
+import net.softloaf.automatchic.app.dto.request.NewUserRequest;
+import net.softloaf.automatchic.app.dto.request.ResetPasswordRequest;
 import net.softloaf.automatchic.app.security.JwtUtils;
 import net.softloaf.automatchic.app.security.UserDetailsImpl;
 import net.softloaf.automatchic.app.security.UserDetailsServiceImpl;
@@ -29,7 +29,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
+    public ResponseEntity<?> createAuthToken(@RequestBody AuthRequest authRequest) {
         UserDetailsImpl userDetails;
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));

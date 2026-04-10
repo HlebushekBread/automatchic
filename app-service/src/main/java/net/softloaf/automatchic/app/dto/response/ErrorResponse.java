@@ -1,8 +1,6 @@
-package net.softloaf.automatchic.app.dto;
+package net.softloaf.automatchic.app.dto.response;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 public class ErrorResponse {

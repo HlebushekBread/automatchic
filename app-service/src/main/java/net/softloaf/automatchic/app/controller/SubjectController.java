@@ -1,7 +1,9 @@
 package net.softloaf.automatchic.app.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.SubjectRequest;
+import net.softloaf.automatchic.app.dto.request.SubjectRequest;
+import net.softloaf.automatchic.app.dto.response.SubjectBasicResponse;
+import net.softloaf.automatchic.app.dto.response.SubjectFullResponse;
 import net.softloaf.automatchic.app.model.Subject;
 import net.softloaf.automatchic.app.service.SubjectService;
 import org.springframework.http.HttpStatus;
@@ -18,22 +20,22 @@ public class SubjectController {
     private final SubjectService subjectService;
 
     @GetMapping("/view/{id}")
-    public Subject getSubjectViewById(@PathVariable long id) {
+    public SubjectFullResponse getSubjectViewById(@PathVariable long id) {
         return subjectService.findById(false, id);
     }
 
     @GetMapping("/preview/{id}")
-    public Subject getSubjectPreviewById(@PathVariable long id) {
+    public SubjectFullResponse getSubjectPreviewById(@PathVariable long id) {
         return subjectService.findById(true, id);
     }
 
     @GetMapping("/public")
-    public List<Subject> getPublicSubjects() {
+    public List<SubjectBasicResponse> getPublicSubjects() {
         return subjectService.findAllPublic();
     }
 
     @GetMapping("/user")
-    public List<Subject> getUserSubjects() {
+    public List<SubjectFullResponse> getUserSubjects() {
         return subjectService.findAllByCurrentUserId();
     }
 

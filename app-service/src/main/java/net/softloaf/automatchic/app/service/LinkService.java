@@ -1,7 +1,7 @@
 package net.softloaf.automatchic.app.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.LinkRequest;
+import net.softloaf.automatchic.app.dto.request.LinkRequest;
 import net.softloaf.automatchic.app.model.Link;
 import net.softloaf.automatchic.app.model.Subject;
 import net.softloaf.automatchic.app.repository.LinkRepository;

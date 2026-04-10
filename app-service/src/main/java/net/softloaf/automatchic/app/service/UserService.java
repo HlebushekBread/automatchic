@@ -1,8 +1,8 @@
 package net.softloaf.automatchic.app.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.NewUserRequest;
-import net.softloaf.automatchic.app.dto.UserUpdateRequest;
+import net.softloaf.automatchic.app.dto.request.NewUserRequest;
+import net.softloaf.automatchic.app.dto.request.UserUpdateRequest;
 import net.softloaf.automatchic.app.model.Role;
 import net.softloaf.automatchic.app.model.User;
 import net.softloaf.automatchic.app.repository.UserRepository;
@@ -106,7 +106,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public boolean checkEnabled(long id) {
+    public boolean checkConfirmed(long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
 
         return user.isConfirmed();

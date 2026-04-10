@@ -6,7 +6,7 @@ import net.softloaf.automatchic.app.model.*;
 import java.util.List;
 
 @Data
-public class SubjectResponse {
+public class SubjectFullResponse {
     private Long id;
     private String name;
     private String teacher;
@@ -20,10 +20,10 @@ public class SubjectResponse {
     private Integer targetGrade;
     private String publicity;
     private UserBasicResponse user;
-    private List<Task> tasks;
-    private List<Link> links;
+    private List<TaskFullResponse> tasks;
+    private List<LinkFullResponse> links;
 
-    public SubjectResponse(Subject subject) {
+    public SubjectFullResponse(Subject subject) {
         this.id = subject.getId();
         this.name = subject.getName();
         this.teacher = subject.getTeacher();
@@ -37,7 +37,7 @@ public class SubjectResponse {
         this.targetGrade = subject.getTargetGrade();
         this.publicity = subject.getPublicity().toString();
         this.user = new UserBasicResponse(subject.getUser());
-        this.tasks = subject.getTasks();
-        this.links = subject.getLinks();
+        this.tasks = subject.getTasks().stream().map(TaskFullResponse::new).toList();
+        this.links = subject.getLinks().stream().map(LinkFullResponse::new).toList();
     }
 }

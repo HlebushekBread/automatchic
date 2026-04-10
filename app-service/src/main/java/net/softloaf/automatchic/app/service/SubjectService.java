@@ -1,7 +1,9 @@
 package net.softloaf.automatchic.app.service;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.SubjectRequest;
+import net.softloaf.automatchic.app.dto.request.SubjectRequest;
+import net.softloaf.automatchic.app.dto.response.SubjectBasicResponse;
+import net.softloaf.automatchic.app.dto.response.SubjectFullResponse;
 import net.softloaf.automatchic.app.model.*;
 import net.softloaf.automatchic.app.repository.SubjectRepository;
 import net.softloaf.automatchic.app.repository.UserRepository;
@@ -22,17 +24,23 @@ public class SubjectService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<Subject> findAllPublic() {
-        return subjectRepository.findAllByPublicity(Publicity.PUBLIC);
+    public List<SubjectBasicResponse> findAllPublic() {
+        return subjectRepository.findAllByPublicity(Publicity.PUBLIC)
+                .stream()
+                .map(SubjectBasicResponse::new)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<Subject> findAllByCurrentUserId() {
-        return subjectRepository.findAllByUserId(sessionService.getCurrentUserId());
+    public List<SubjectFullResponse> findAllByCurrentUserId() {
+        return subjectRepository.findAllByUserId(sessionService.getCurrentUserId())
+                .stream()
+                .map(SubjectFullResponse::new)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public Subject findById(boolean preview, long id) {
+    public SubjectFullResponse findById(boolean preview, long id) {
         Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
         if(preview) {
@@ -45,7 +53,7 @@ public class SubjectService {
             }
         }
 
-        return subject;
+        return new SubjectFullResponse(subject);
     }
 
     @Transactional

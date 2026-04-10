@@ -1,8 +1,8 @@
 package net.softloaf.automatchic.app.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.softloaf.automatchic.app.dto.TaskRequest;
-import net.softloaf.automatchic.app.dto.TaskPositionRequest;
+import net.softloaf.automatchic.app.dto.request.TaskRequest;
+import net.softloaf.automatchic.app.dto.request.TaskPositionRequest;
 import net.softloaf.automatchic.app.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -39,11 +39,9 @@ public class User {
     @Column(name = "role")
     private Role role;
 
-    @JsonIgnore
     @Column(name = "is_confirmed")
     private boolean isConfirmed;
 
-    @JsonIgnore
     @CreatedDate
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
