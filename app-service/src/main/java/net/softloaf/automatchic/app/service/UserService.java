@@ -9,6 +9,7 @@ import net.softloaf.automatchic.app.repository.UserRepository;
 import net.softloaf.automatchic.app.service.producer.NotificationProducer;
 import net.softloaf.automatchic.app.service.token.EmailConfirmationTokenService;
 import net.softloaf.automatchic.app.service.token.PasswordResetTokenService;
+import net.softloaf.automatchic.app.service.util.SearchStringService;
 import net.softloaf.automatchic.app.service.util.SessionService;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -18,10 +19,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Locale;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
     private final SessionService sessionService;
+    private final SearchStringService searchStringService;
     private final EmailConfirmationTokenService emailConfirmationTokenService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final UserRepository userRepository;
@@ -52,6 +56,8 @@ public class UserService {
         user.setRole(Role.STUDENT);
 
         user.setConfirmed(false);
+
+        user.setSearchString(searchStringService.getSearchString(user));
 
         userRepository.save(user);
 
@@ -96,6 +102,8 @@ public class UserService {
 
         user.setFullName(userUpdateRequest.getFullName());
         user.setGroup(userUpdateRequest.getGroup());
+
+        user.setSearchString(searchStringService.getSearchString(user));
 
         userRepository.save(user);
 

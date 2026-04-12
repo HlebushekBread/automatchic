@@ -51,6 +51,9 @@ public class Subject {
     @Column(name = "publicity")
     private Publicity publicity;
 
+    @Column(name = "search_string")
+    private String searchString;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

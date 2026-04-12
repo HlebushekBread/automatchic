@@ -46,6 +46,9 @@ public class User {
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
 
+    @Column(name = "search_string")
+    private String searchString;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Subject> subjects;

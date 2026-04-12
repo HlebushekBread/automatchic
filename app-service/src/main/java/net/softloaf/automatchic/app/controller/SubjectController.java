@@ -30,8 +30,12 @@ public class SubjectController {
     }
 
     @GetMapping("/public")
-    public List<SubjectBasicResponse> getPublicSubjects() {
-        return subjectService.findAllPublic();
+    public List<SubjectBasicResponse> getPublicSubjects(
+            @RequestParam(defaultValue = "") String query,
+            @RequestParam(defaultValue = "all") String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        return subjectService.findPublic(query, type, page, size);
     }
 
     @GetMapping("/user")

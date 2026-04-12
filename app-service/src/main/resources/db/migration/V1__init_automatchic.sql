@@ -69,6 +69,7 @@ CREATE TABLE public.subject (
     grading_min double precision DEFAULT 20,
     target_grade integer DEFAULT 0 NOT NULL,
     publicity character varying DEFAULT 'PUBLIC'::character varying NOT NULL,
+    search_string character varying DEFAULT ''::character varying,
     user_id bigint NOT NULL
 );
 
@@ -134,7 +135,8 @@ CREATE TABLE public."user" (
     "group" character varying DEFAULT ''::character varying,
     role character varying DEFAULT 'STUDENT'::character varying NOT NULL,
     registered_at timestamp without time zone NOT NULL,
-    is_confirmed boolean DEFAULT false NOT NULL
+    is_confirmed boolean DEFAULT false NOT NULL,
+    search_string character varying DEFAULT ''::character varying
 );
 
 

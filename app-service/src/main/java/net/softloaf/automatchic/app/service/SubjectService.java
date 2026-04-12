@@ -7,7 +7,11 @@ import net.softloaf.automatchic.app.dto.response.SubjectFullResponse;
 import net.softloaf.automatchic.app.model.*;
 import net.softloaf.automatchic.app.repository.SubjectRepository;
 import net.softloaf.automatchic.app.repository.UserRepository;
+import net.softloaf.automatchic.app.service.util.SearchStringService;
 import net.softloaf.automatchic.app.service.util.SessionService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +24,24 @@ import java.util.List;
 @Service
 public class SubjectService {
     private final SessionService sessionService;
+    private final SearchStringService searchStringService;
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<SubjectBasicResponse> findAllPublic() {
-        return subjectRepository.findAllByPublicity(Publicity.PUBLIC)
+    public List<SubjectBasicResponse> findPublic(String query, String gradingType, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+        String targetQuery = searchStringService.clean(query);
+        GradingType targetGradingType;
+        try {
+            targetGradingType = GradingType.valueOf(gradingType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            targetGradingType = null;
+        }
+
+        return subjectRepository.findPublicSubjects(targetQuery, targetGradingType , pageable)
+                .getContent()
                 .stream()
                 .map(SubjectBasicResponse::new)
                 .toList();
@@ -60,7 +76,7 @@ public class SubjectService {
     public long save(SubjectRequest subjectRequest) {
         if (subjectRequest.getId() == 0) {
             if (subjectRepository.countByUserId(sessionService.getCurrentUserId()) >= 10) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит предметов");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит дисциплин");
             }
         }
 
@@ -85,6 +101,9 @@ public class SubjectService {
         subject.setGradingMin(subjectRequest.getGradingMin());
         subject.setTargetGrade(subjectRequest.getTargetGrade());
         subject.setPublicity(Publicity.valueOf(subjectRequest.getPublicity()));
+
+        subject.setSearchString(searchStringService.getSearchString(subject));
+
         subject.setUser(user);
 
         subjectRepository.save(subject);
@@ -106,7 +125,7 @@ public class SubjectService {
     @Transactional
     public long copy(long id) {
         if (subjectRepository.countByUserId(sessionService.getCurrentUserId()) >= 10) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит предметов");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит дисциплин");
         }
 
         Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
@@ -128,6 +147,8 @@ public class SubjectService {
         subjectCopy.setGradingMin(subject.getGradingMin());
         subjectCopy.setTargetGrade(3);
         subjectCopy.setPublicity(Publicity.PRIVATE);
+
+        subjectCopy.setSearchString(subject.getSearchString());
 
         subjectCopy.setUser(userRepository.findById(sessionService.getCurrentUserId()).orElse(null));
 
