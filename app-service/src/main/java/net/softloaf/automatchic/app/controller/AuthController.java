@@ -1,5 +1,6 @@
 package net.softloaf.automatchic.app.controller;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.app.dto.request.AuthRequest;
 import net.softloaf.automatchic.app.dto.response.JwtResponse;
@@ -10,6 +11,7 @@ import net.softloaf.automatchic.app.security.UserDetailsImpl;
 import net.softloaf.automatchic.app.security.UserDetailsServiceImpl;
 import net.softloaf.automatchic.app.service.UserService;
 import net.softloaf.automatchic.app.service.util.SessionService;
+import net.softloaf.automatchic.common.metrics.Metrics;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +29,7 @@ public class AuthController {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final MeterRegistry meterRegistry;
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthToken(@RequestBody AuthRequest authRequest) {
@@ -44,7 +47,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> saveNewUser(@RequestBody NewUserRequest newUserRequest) {
         userService.saveNewUser(newUserRequest);
-
+        meterRegistry.counter(Metrics.USERS_REGISTERED_TOTAL).increment();
         UserDetailsImpl userDetails;
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(newUserRequest.getUsername(), newUserRequest.getPassword()));
@@ -65,6 +68,7 @@ public class AuthController {
     @PostMapping("/confirm")
     public ResponseEntity<?> confirmEmail(@RequestBody String token) {
         userService.confirmUser(token);
+        meterRegistry.counter(Metrics.USERS_CONFIRMED_TOTAL).increment();
         return ResponseEntity.noContent().build();
     }
 

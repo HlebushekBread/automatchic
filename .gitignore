@@ -3,6 +3,7 @@ backend/target/
 .mvn/wrapper/maven-wrapper.jar
 !app-service/src/main/**/target/
 !app-service/src/test/**/target/
+docker-compose/alertmanager.yml
 
 ### STS ###
 .apt_generated

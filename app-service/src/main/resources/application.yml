@@ -14,7 +14,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -50,6 +50,21 @@ frontend:
 jwt:
   secret: ${JWT_SECRET}
   lifetime: ${JWT_LIFETIME}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - prometheus
+      path-mapping:
+        prometheus:
+          metrics
+
+  tags:
+    application: ${spring.application.name}
 
 logging:
   level:

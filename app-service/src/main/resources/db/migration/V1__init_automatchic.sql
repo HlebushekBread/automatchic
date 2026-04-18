@@ -97,8 +97,8 @@ ALTER TABLE public.subject ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 CREATE TABLE public.task (
     id bigint NOT NULL,
     name character varying DEFAULT 'Название'::character varying NOT NULL,
-    type character varying DEFAULT 'HOMEWORK'::character varying,
-    due_date timestamp without time zone DEFAULT '2000-01-01'::date,
+    type character varying DEFAULT 'HOMEWORK'::character varying NOT NULL,
+    due_date timestamp without time zone,
     max_grade double precision DEFAULT 5,
     received_grade double precision DEFAULT 0,
     grade_weight double precision DEFAULT 1,

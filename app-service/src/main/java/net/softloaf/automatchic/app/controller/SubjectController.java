@@ -1,11 +1,13 @@
 package net.softloaf.automatchic.app.controller;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.app.dto.request.SubjectRequest;
 import net.softloaf.automatchic.app.dto.response.SubjectBasicResponse;
 import net.softloaf.automatchic.app.dto.response.SubjectFullResponse;
-import net.softloaf.automatchic.app.model.Subject;
 import net.softloaf.automatchic.app.service.SubjectService;
+import net.softloaf.automatchic.common.metrics.Metrics;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +47,7 @@ public class SubjectController {
 
     @PutMapping("/save")
     public ResponseEntity<?> saveSubject(@RequestBody SubjectRequest subjectRequest) {
-        long response = subjectService.save(subjectRequest);
+    long response = subjectService.save(subjectRequest);
         return new ResponseEntity<>(Map.of("id", response), HttpStatus.OK);
     }
 

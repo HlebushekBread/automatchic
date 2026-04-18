@@ -51,6 +51,17 @@ jwt:
   secret: ${JWT_SECRET}
   lifetime: ${JWT_LIFETIME}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - prometheus
+  tags:
+    application: ${spring.application.name}
+
 logging:
   level:
     org.flywaydb: DEBUG

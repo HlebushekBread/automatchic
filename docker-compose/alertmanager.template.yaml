@@ -1,0 +1,15 @@
+global:
+  smtp_smarthost: ${MAIL_HOST}:${MAIL_PORT}
+  smtp_from: ${MAIL_USERNAME}
+  smtp_auth_username: ${MAIL_USERNAME}
+  smtp_auth_password: ${MAIL_PASSWORD}
+  smtp_require_tls: true
+
+receivers:
+  - name: 'email-receiver'
+    email_configs:
+      - to: ${MAIL_USERNAME}
+        send_resolved: true
+
+route:
+  receiver: 'email-receiver'
