@@ -3,6 +3,8 @@ package net.softloaf.automatchic.app.service;
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.app.dto.request.TaskRequest;
 import net.softloaf.automatchic.app.dto.request.TaskPositionRequest;
+import net.softloaf.automatchic.app.dto.response.TaskBasicResponse;
+import net.softloaf.automatchic.app.dto.response.TaskFullResponse;
 import net.softloaf.automatchic.app.model.Subject;
 import net.softloaf.automatchic.app.model.Task;
 import net.softloaf.automatchic.app.model.TaskType;
@@ -78,5 +80,10 @@ public class TaskService {
         }
 
         taskRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TaskBasicResponse> findScheduled(long userId) {
+        return taskRepository.findAllBySubjectUserIdAndDueDateIsNotNullOrderByDueDateAsc(userId).stream().map(TaskBasicResponse::new).toList();
     }
 }

@@ -3,7 +3,10 @@ package net.softloaf.automatchic.app.controller;
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.app.dto.request.TaskRequest;
 import net.softloaf.automatchic.app.dto.request.TaskPositionRequest;
+import net.softloaf.automatchic.app.dto.response.TaskBasicResponse;
+import net.softloaf.automatchic.app.dto.response.TaskFullResponse;
 import net.softloaf.automatchic.app.service.TaskService;
+import net.softloaf.automatchic.app.service.util.SessionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final SessionService sessionService;
 
     @PutMapping("/save")
     public ResponseEntity<?> saveTask(@RequestBody TaskRequest taskRequest) {
@@ -33,5 +37,10 @@ public class TaskController {
     public ResponseEntity<?> deleteTask(@PathVariable long id) {
         taskService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/scheduled/self")
+    public List<TaskBasicResponse> getSelfScheduledTasks() {
+        return taskService.findScheduled(sessionService.getCurrentUserId());
     }
 }
