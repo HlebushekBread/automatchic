@@ -1,0 +1,3 @@
+net\softloaf\automatchic\common\config\KafkaConfig.class
+net\softloaf\automatchic\common\dto\EmailNotificationEvent.class
+net\softloaf\automatchic\common\enums\EvaluationType.class

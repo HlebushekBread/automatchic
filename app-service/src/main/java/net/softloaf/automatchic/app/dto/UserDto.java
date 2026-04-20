@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.softloaf.automatchic.app.model.Role;
+import net.softloaf.automatchic.common.enums.Role;
 import net.softloaf.automatchic.app.model.User;
 
 import java.io.Serial;

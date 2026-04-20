@@ -3,6 +3,7 @@ package net.softloaf.automatchic.app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import net.softloaf.automatchic.common.enums.Role;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

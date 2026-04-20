@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.softloaf.automatchic.common.enums.TaskType;
 
 import java.time.LocalDateTime;
 

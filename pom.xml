@@ -18,6 +18,7 @@
 		<module>common-module</module>
 		<module>app-service</module>
 		<module>notification-service</module>
+		<module>history-service</module>
 	</modules>
 
 	<properties>
@@ -25,16 +26,13 @@
 		<jjwt.version>0.12.6</jjwt.version>
 	</properties>
 
-	<!-- Зависимости, которые БУДУТ во всех модулях (только Lombok) -->
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
-	<!-- Список доступных зависимостей (версии указываем только тут) -->
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -51,6 +49,11 @@
 				<groupId>io.jsonwebtoken</groupId>
 				<artifactId>jjwt-jackson</artifactId>
 				<version>${jjwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.axonframework</groupId>
+				<artifactId>axon-spring-boot-starter</artifactId>
+				<version>4.9.1</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

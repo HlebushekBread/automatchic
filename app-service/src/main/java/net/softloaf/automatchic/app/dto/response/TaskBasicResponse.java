@@ -2,7 +2,7 @@ package net.softloaf.automatchic.app.dto.response;
 
 import lombok.Data;
 import net.softloaf.automatchic.app.model.Task;
-import net.softloaf.automatchic.app.model.TaskType;
+import net.softloaf.automatchic.common.enums.TaskType;
 
 import java.time.LocalDateTime;
 

@@ -7,9 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="history-service" />
+        <module name="app-service" />
         <module name="notification-service" />
         <module name="common-module" />
-        <module name="app-service" />
       </profile>
     </annotationProcessing>
   </component>
@@ -18,6 +19,7 @@
       <module name="app-service" options="-parameters" />
       <module name="automatchic" options="" />
       <module name="common-module" options="-parameters" />
+      <module name="history-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
     </option>
   </component>

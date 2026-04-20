@@ -1,0 +1,59 @@
+2026-04-20 13:43:39.504 |  WARN |                      main | i.m.core.instrument.MeterRegistry        | This Gauge has been already registered (MeterId{name='disk.free', tags=[tag(axonserver=axonserver),tag(path=/)]}), the registration will be ignored. Note that subsequent logs will be logged at debug level.
+2026-04-20 13:43:40.147 |  INFO |                      main | i.a.a.e.c.i.MessagingClusterServer       | Axon Server Cluster Server started on port: 8224 - no SSL
+2026-04-20 13:43:40.254 |  INFO |                      main | io.axoniq.axonserver.grpc.Gateway        | Axon Server Gateway started on port: 8124 - no SSL
+2026-04-20 13:43:40.273 |  INFO |                      main | o.s.b.w.embedded.tomcat.TomcatWebServer  | Tomcat started on port 8024 (http) with context path '/'
+2026-04-20 13:43:40.293 |  INFO |                      main | io.axoniq.axonserver.AxonServer          | Started AxonServer in 15.788 seconds (process running for 16.832)
+2026-04-20 13:43:46.275 |  INFO |      http-nio-8024-exec-3 | A.i.a.a.ui.ClusterUpdatesService         | [<anonymous>] Subscribed to context updates.
+2026-04-20 13:43:52.974 |  INFO |      http-nio-8024-exec-7 | A.i.a.a.ui.ClusterUpdatesService         | [<anonymous>] Subscribed to context updates.
+2026-04-20 13:43:54.247 |  INFO |      http-nio-8024-exec-2 | i.a.a.a.c.r.ContextAdminRequestProcessor | [<anonymous>] Request to initialize cluster [default] .
+2026-04-20 13:43:54.260 |  INFO |      http-nio-8024-exec-2 | i.a.a.c.r.file.PrimaryLogEntryStore      | _admin: Initializing log
+2026-04-20 13:43:54.263 |  INFO |      http-nio-8024-exec-2 | i.a.a.c.r.file.PrimaryLogEntryStore      | _admin: File for segment 1 does not exist. Creating new file with size of 16777216.
+2026-04-20 13:43:54.290 |  INFO |      http-nio-8024-exec-2 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 0: Updating state from null to IdleState (Node initialized.)
+2026-04-20 13:43:54.301 |  INFO |      http-nio-8024-exec-2 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 0: Starting the node...
+2026-04-20 13:43:54.307 |  INFO |      http-nio-8024-exec-2 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 0: Updating state from IdleState to FollowerState (Role PRIMARY)
+2026-04-20 13:43:54.312 |  INFO |      http-nio-8024-exec-2 | io.axoniq.axonserver.cluster.RaftNode    | The replication log compaction for "_admin" is scheduled each 1 hour(s).
+2026-04-20 13:43:54.313 |  INFO |      http-nio-8024-exec-2 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 0: Node started.
+2026-04-20 13:43:55.611 |  INFO |        _admin-raftState-1 | i.a.axonserver.cluster.FollowerState     | _admin in term 0: Timeout in follower state: 1303 ms.
+2026-04-20 13:43:55.616 |  INFO |        _admin-raftState-1 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 0: Updating state from FollowerState to PreVoteState (_admin in term 0: Timeout in follower state: 1303 ms.)
+2026-04-20 13:43:55.624 |  INFO |        _admin-raftState-1 | i.a.a.cluster.election.DefaultPreVote    | _admin: Starting pre-vote from axonserver-fd10b0d0-b042-4deb-a279-da11769a48ff in term 0
+2026-04-20 13:43:55.625 |  INFO |        _admin-raftState-1 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 0: Updating state from PreVoteState to CandidateState (_admin: Election for term 1 is won by axonserver-fd10b0d0-b042-4deb-a279-da11769a48ff (PrimaryAndVotingMajorityStrategy {votes={axonserver-fd10b0d0-b042-4deb-a279-da11769a48ff=true}}))
+2026-04-20 13:43:55.630 |  INFO |        _admin-raftState-1 | i.a.a.logging.ClusterEventsLogger        | _admin in term 0: Leader is null
+2026-04-20 13:43:55.632 |  INFO |        _admin-raftState-1 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 1: Term updated (axonserver-fd10b0d0-b042-4deb-a279-da11769a48ff is starting a new election, so increases its term from 0 to 1).
+2026-04-20 13:43:55.634 |  INFO |        _admin-raftState-1 | i.a.a.cluster.election.DefaultElection   | _admin: Starting election from axonserver-fd10b0d0-b042-4deb-a279-da11769a48ff in term 1
+2026-04-20 13:43:55.637 |  INFO |        _admin-raftState-1 | io.axoniq.axonserver.cluster.RaftNode    | _admin in term 1: Updating state from CandidateState to LeaderState (_admin: Election for term 1 is won by axonserver-fd10b0d0-b042-4deb-a279-da11769a48ff (PrimaryAndVotingMajorityStrategy {votes={axonserver-fd10b0d0-b042-4deb-a279-da11769a48ff=true}}))
+2026-04-20 13:43:55.648 |  INFO |        _admin-raftState-1 | i.a.a.logging.ClusterEventsLogger        | _admin in term 1: (notification) Leader is axonserver
+2026-04-20 13:43:55.651 |  INFO |        _admin-raftState-1 | i.a.a.logging.ClusterEventsLogger        | _admin in term 1: Leader
+2026-04-20 13:43:55.654 |  INFO |        _admin-raftState-1 | i.axoniq.axonserver.cluster.LeaderState  | _admin in term 1: Start replication thread for 0 peers.
+2026-04-20 13:43:55.655 |  INFO |        _admin-raftState-1 | i.axoniq.axonserver.cluster.LeaderState  | _admin in term 1: Appending info that leader has been elected.
+2026-04-20 13:43:55.749 |  INFO |      http-nio-8024-exec-2 | i.a.a.c.r.file.PrimaryLogEntryStore      | default: Initializing log
+2026-04-20 13:43:55.749 |  INFO |      http-nio-8024-exec-2 | i.a.a.c.r.file.PrimaryLogEntryStore      | default: File for segment 1 does not exist. Creating new file with size of 16777216.
+2026-04-20 13:43:55.754 |  INFO |      http-nio-8024-exec-2 | io.axoniq.axonserver.cluster.RaftNode    | default in term 0: Updating state from null to IdleState (Node initialized.)
+2026-04-20 13:43:55.757 |  INFO |           task-scheduler1 | io.axoniq.axonserver.cluster.RaftNode    | default in term 0: Starting the node...
+2026-04-20 13:43:55.758 |  INFO |           task-scheduler1 | io.axoniq.axonserver.cluster.RaftNode    | default in term 0: Updating state from IdleState to FollowerState (Role PRIMARY)
+2026-04-20 13:43:55.758 |  INFO |           task-scheduler1 | io.axoniq.axonserver.cluster.RaftNode    | The replication log compaction for "default" is scheduled each 1 hour(s).
+2026-04-20 13:43:55.760 |  INFO |           task-scheduler1 | io.axoniq.axonserver.cluster.RaftNode    | default in term 0: Node started.
+2026-04-20 13:43:57.060 |  INFO |       default-raftState-0 | i.a.axonserver.cluster.FollowerState     | default in term 0: Timeout in follower state: 1302 ms.
+2026-04-20 13:43:57.060 |  INFO |       default-raftState-0 | io.axoniq.axonserver.cluster.RaftNode    | default in term 0: Updating state from FollowerState to PreVoteState (default in term 0: Timeout in follower state: 1302 ms.)
+2026-04-20 13:43:57.062 |  INFO |       default-raftState-0 | i.a.a.cluster.election.DefaultPreVote    | default: Starting pre-vote from axonserver-0ff9695a-e708-4d44-9fd1-9fb10812dc8b in term 0
+2026-04-20 13:43:57.063 |  INFO |       default-raftState-0 | io.axoniq.axonserver.cluster.RaftNode    | default in term 0: Updating state from PreVoteState to CandidateState (default: Election for term 1 is won by axonserver-0ff9695a-e708-4d44-9fd1-9fb10812dc8b (PrimaryAndVotingMajorityStrategy {votes={axonserver-0ff9695a-e708-4d44-9fd1-9fb10812dc8b=true}}))
+2026-04-20 13:43:57.068 |  INFO |       default-raftState-0 | i.a.a.logging.ClusterEventsLogger        | default in term 0: Leader is null
+2026-04-20 13:43:57.069 |  INFO |       default-raftState-0 | io.axoniq.axonserver.cluster.RaftNode    | default in term 1: Term updated (axonserver-0ff9695a-e708-4d44-9fd1-9fb10812dc8b is starting a new election, so increases its term from 0 to 1).
+2026-04-20 13:43:57.069 |  INFO |       default-raftState-0 | i.a.a.cluster.election.DefaultElection   | default: Starting election from axonserver-0ff9695a-e708-4d44-9fd1-9fb10812dc8b in term 1
+2026-04-20 13:43:57.070 |  INFO |       default-raftState-0 | io.axoniq.axonserver.cluster.RaftNode    | default in term 1: Updating state from CandidateState to LeaderState (default: Election for term 1 is won by axonserver-0ff9695a-e708-4d44-9fd1-9fb10812dc8b (PrimaryAndVotingMajorityStrategy {votes={axonserver-0ff9695a-e708-4d44-9fd1-9fb10812dc8b=true}}))
+2026-04-20 13:43:57.074 |  INFO |       default-raftState-0 | i.a.a.logging.ClusterEventsLogger        | default in term 1: (notification) Leader is axonserver
+2026-04-20 13:43:57.077 |  INFO |       default-raftState-0 | i.a.a.logging.ClusterEventsLogger        | default in term 1: Leader
+2026-04-20 13:43:57.077 |  INFO |       default-raftState-0 | i.axoniq.axonserver.cluster.LeaderState  | default in term 1: Start replication thread for 0 peers.
+2026-04-20 13:43:57.078 |  INFO |       default-raftState-0 | i.axoniq.axonserver.cluster.LeaderState  | default in term 1: Appending info that leader has been elected.
+2026-04-20 13:43:57.213 |  INFO |         _admin-raftNode-0 | i.axoniq.axonserver.cluster.LeaderState  | _admin in term 1: apply configuration change 4: Create context _admin
+2026-04-20 13:43:57.214 |  INFO |         _admin-raftNode-0 | i.axoniq.axonserver.cluster.LeaderState  | _admin in term 1: update last applied configuration change index 4
+2026-04-20 13:43:57.228 |  INFO |         _admin-raftNode-0 | i.axoniq.axonserver.cluster.LeaderState  | default in term 1: apply configuration change 5: Create context default
+2026-04-20 13:43:57.228 |  INFO |         _admin-raftNode-0 | i.axoniq.axonserver.cluster.LeaderState  | default in term 1: update last applied configuration change index 5
+2026-04-20 13:43:57.235 |  INFO |         _admin-raftNode-0 | i.a.a.logging.ClusterEventsLogger        | _admin: context _admin created, my role PRIMARY, min event token 0, min snapshot token 0
+2026-04-20 13:43:57.335 |  INFO |        default-raftNode-0 | i.a.a.l.file.WritableFileStorageTier     | default-EVENT: Index on disk is up to date
+2026-04-20 13:43:57.341 |  INFO |        default-raftNode-0 | i.a.a.l.file.WritableFileStorageTier     | default-EVENT: Opening file ./events/default/00000000000000000000.events
+2026-04-20 13:43:57.345 |  INFO |        default-raftNode-0 | i.a.a.l.file.WritableFileStorageTier     | default-EVENT: Segments initialized
+2026-04-20 13:43:57.357 |  INFO |        default-raftNode-0 | i.a.a.l.file.WritableFileStorageTier     | default-SNAPSHOT: Index on disk is up to date
+2026-04-20 13:43:57.358 |  INFO |        default-raftNode-0 | i.a.a.l.file.WritableFileStorageTier     | default-SNAPSHOT: Opening file ./events/default/00000000000000000000.snapshots
+2026-04-20 13:43:57.360 |  INFO |        default-raftNode-0 | i.a.a.l.file.WritableFileStorageTier     | default-SNAPSHOT: Segments initialized
+2026-04-20 13:43:57.371 |  INFO |        default-raftNode-0 | i.a.a.logging.ClusterEventsLogger        | default: context default created, my role PRIMARY, min event token 0, min snapshot token 0
+2026-04-20 13:43:58.802 |  INFO |           grpc-executor-4 | i.a.a.logging.TopologyEventsLogger       | Application connected: history-service, clientId = 1@18a18a5e35c6, clientStreamId = 1@18a18a5e35c6.798c052f-d69b-4eb0-93c6-0cb05c510e3e, context = default

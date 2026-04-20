@@ -2,6 +2,7 @@
 name: automatchic
 
 services:
+  #--------------------------App-----------------------------#
   app:
     container_name: app-automatchic
     build:
@@ -11,25 +12,99 @@ services:
       - "1337:8080"
     environment:
       - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
-      - DB_URL=jdbc:postgresql://postgres:5432/automatchic
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
+      - APP_DB_URL=jdbc:postgresql://app-postgres:5432/automatchic
+      - APP_DB_USERNAME=${APP_DB_USERNAME}
+      - APP_DB_PASSWORD=${APP_DB_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_LIFETIME=${JWT_LIFETIME}
       - BROKER_URL=kafka:9092
-      - REDIS_HOST=redis
+      - REDIS_HOST=app-redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=
       - REDIS_TIMEOUT=60000
       - FRONTEND_URL=http://softloaf.net
+    networks:
+      - app-net
+      - shared-net
     depends_on:
-      postgres:
+      app-postgres:
         condition: service_healthy
-      redis:
+      app-redis:
         condition: service_started
       kafka:
         condition: service_started
     restart: always
+
+  app-postgres:
+    image: postgres:15-alpine
+    container_name: app-postgres-automatchic
+    restart: always
+    environment:
+      POSTGRES_DB: automatchic
+      POSTGRES_USER: ${APP_DB_USERNAME}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+    networks:
+      - app-net
+    volumes:
+      - app-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${APP_DB_USERNAME} -d automatchic" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app-redis:
+    image: redis:7-alpine
+    container_name: app-redis-automatchic
+    restart: always
+    networks:
+      - app-net
+    volumes:
+      - app-redis-data:/data
+
+  #--------------------------History-----------------------------#
+
+  history:
+    container_name: history-automatchic
+    build:
+      context: ..
+      dockerfile: history-service/Dockerfile
+    ports:
+      - "1338:8080"
+    environment:
+      - HISTORY_DB_URL=jdbc:postgresql://history-postgres:5432/history
+      - HISTORY_DB_USERNAME=${HISTORY_DB_USERNAME}
+      - HISTORY_DB_PASSWORD=${HISTORY_DB_PASSWORD}
+      - BROKER_URL=kafka:9092
+      - AXON_AXONSERVER_SERVERS=axonserver:8124
+      - AXON_AXONSERVER_CONTEXT=default
+    networks:
+      - history-net
+      - shared-net
+    depends_on:
+      history-postgres:
+        condition: service_healthy
+    restart: always
+
+  history-postgres:
+    image: postgres:15-alpine
+    container_name: history-postgres-automatchic
+    restart: always
+    environment:
+      POSTGRES_DB: history
+      POSTGRES_USER: ${HISTORY_DB_USERNAME}
+      POSTGRES_PASSWORD: ${HISTORY_DB_PASSWORD}
+    networks:
+      - history-net
+    volumes:
+      - history-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${HISTORY_DB_USERNAME} -d history" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  #--------------------------Notification-----------------------------#
 
   notification:
     container_name: notification-automatchic
@@ -42,33 +117,14 @@ services:
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
+    networks:
+      - shared-net
     depends_on:
       kafka:
         condition: service_started
     restart: always
 
-  postgres:
-    image: postgres:15-alpine
-    container_name: postgres-automatchic
-    restart: always
-    environment:
-      POSTGRES_DB: automatchic
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d automatchic" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:7-alpine
-    container_name: redis-automatchic
-    restart: always
-    volumes:
-      - redis-data:/data
+  #--------------------------Shared-----------------------------#
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
@@ -87,18 +143,42 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    networks:
+      - shared-net
 
   kafka-exporter:
     image: danielqsj/kafka-exporter
     container_name: kafka-exporter-automatchic
+    networks:
+      - shared-net
     command: [ "--kafka.server=kafka:9092" ]
     restart: always
     depends_on:
       - kafka
 
+  axonserver:
+    image: axoniq/axonserver
+    container_name: axonserver-automatchic
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+    volumes:
+      - ./axon-data:/axonserver/data
+      - ./axon-events:/axonserver/events
+      - ./axon-config:/axonserver/config
+    environment:
+      - AXONIQ_AXONSERVER_NAME=axonserver
+      - AXONIQ_AXONSERVER_HOSTNAME=axonserver
+      - AXONIQ_AXONSERVER_DEVMODE_ENABLED=true
+    restart: unless-stopped
+    networks:
+      - shared-net
+
   prometheus:
     image: prom/prometheus:v2.44.0
     container_name: prometheus-automatchic
+    networks:
+      - shared-net
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
@@ -111,6 +191,8 @@ services:
       - MAIL_PORT=${MAIL_PORT}
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
+    networks:
+      - shared-net
     volumes:
       - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
     restart:
@@ -119,8 +201,10 @@ services:
   grafana:
     image: grafana/grafana
     container_name: grafana-automatchic
+    networks:
+      - shared-net
     ports:
-      - "1338:3000"
+      - "1340:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
     volumes:
@@ -132,6 +216,12 @@ services:
       - prometheus
 
 volumes:
-  postgres-data:
-  redis-data:
+  app-postgres-data:
+  app-redis-data:
+  history-postgres-data:
   grafana-data:
+
+networks:
+  app-net:
+  history-net:
+  shared-net:

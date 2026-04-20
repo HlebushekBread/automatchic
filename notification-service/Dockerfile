@@ -4,6 +4,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY common-module ./common-module
 COPY app-service ./app-service
+COPY history-service ./history-service
 COPY notification-service ./notification-service
 
 RUN mvn clean install -DskipTests

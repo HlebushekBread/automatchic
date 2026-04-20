@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "`link`")
 public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

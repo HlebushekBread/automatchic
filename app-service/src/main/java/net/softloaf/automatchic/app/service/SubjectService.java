@@ -7,8 +7,12 @@ import net.softloaf.automatchic.app.dto.response.SubjectFullResponse;
 import net.softloaf.automatchic.app.model.*;
 import net.softloaf.automatchic.app.repository.SubjectRepository;
 import net.softloaf.automatchic.app.repository.UserRepository;
+import net.softloaf.automatchic.app.service.producer.ProgressProducer;
 import net.softloaf.automatchic.app.service.util.SearchStringService;
 import net.softloaf.automatchic.app.service.util.SessionService;
+import net.softloaf.automatchic.common.enums.EvaluationType;
+import net.softloaf.automatchic.common.enums.GradingType;
+import net.softloaf.automatchic.common.enums.Publicity;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class SubjectService {
+    private final ProgressProducer progressProducer;
     private final SessionService sessionService;
     private final SearchStringService searchStringService;
     private final SubjectRepository subjectRepository;
@@ -74,7 +79,10 @@ public class SubjectService {
 
     @Transactional
     public long save(SubjectRequest subjectRequest) {
+        boolean subjectCreation = false;
+
         if (subjectRequest.getId() == 0) {
+            subjectCreation = true;
             if (subjectRepository.countByUserId(sessionService.getCurrentUserId()) >= 10) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит дисциплин");
             }
@@ -93,13 +101,46 @@ public class SubjectService {
         subject.setName(subjectRequest.getName());
         subject.setTeacher(subjectRequest.getTeacher());
         subject.setDescription(subjectRequest.getDescription());
+
+        if(!subjectCreation && !subject.getGradingType().toString().equals(subjectRequest.getGradingType())) {
+            progressProducer.sendUpdateGradingTypeEvent(subject.getId(), GradingType.valueOf(subjectRequest.getGradingType()));
+        }
         subject.setGradingType(GradingType.valueOf(subjectRequest.getGradingType()));
+
+        /*
+        if(!subjectCreation && !subject.getEvaluationType().toString().equals(subjectRequest.getEvaluationType())) {
+            progressProducer.sendUpdateEvaluationTypeEvent(subject.getId(), EvaluationType.valueOf(subjectRequest.getEvaluationType()));
+        }
+        subject.setEvaluationType(subjectRequest.getEvaluationType());
+         */
+
+        if(!subjectCreation && subject.getTargetGrade() != subjectRequest.getTargetGrade()) {
+            progressProducer.sendUpdateTargetGradeEvent(subject.getId(), subjectRequest.getTargetGrade());
+        }
+        subject.setTargetGrade(subjectRequest.getTargetGrade());
+
+        if(!subjectCreation && (
+                subject.getGradingMax() != subjectRequest.getGradingMax() ||
+                subject.getGrading5() != subjectRequest.getGrading5() ||
+                subject.getGrading4() != subjectRequest.getGrading4() ||
+                subject.getGrading3() != subjectRequest.getGrading3() ||
+                subject.getGradingMin() != subjectRequest.getGradingMin()
+                )
+        ) {
+            progressProducer.sendUpdateGradingsEvent(subject.getId(),
+                    subjectRequest.getGradingMax(),
+                    subjectRequest.getGrading5(),
+                    subjectRequest.getGrading4(),
+                    subjectRequest.getGrading3(),
+                    subjectRequest.getGradingMin()
+            );
+        }
         subject.setGradingMax(subjectRequest.getGradingMax());
         subject.setGrading5(subjectRequest.getGrading5());
         subject.setGrading4(subjectRequest.getGrading4());
         subject.setGrading3(subjectRequest.getGrading3());
         subject.setGradingMin(subjectRequest.getGradingMin());
-        subject.setTargetGrade(subjectRequest.getTargetGrade());
+
         subject.setPublicity(Publicity.valueOf(subjectRequest.getPublicity()));
 
         subject.setSearchString(searchStringService.getSearchString(subject));
@@ -107,6 +148,21 @@ public class SubjectService {
         subject.setUser(user);
 
         subjectRepository.save(subject);
+
+        if(subjectCreation) {
+            progressProducer.sendCreateProgressEvent(
+                    subject.getId(),
+                    0.0, 0.0,
+                    subject.getGradingType(),
+                    EvaluationType.TOTAL,
+                    subject.getTargetGrade(),
+                    subject.getGradingMax(),
+                    subject.getGrading5(),
+                    subject.getGrading4(),
+                    subject.getGrading3(),
+                    subject.getGradingMin()
+            );
+        }
 
         return subject.getId();
     }
@@ -118,6 +174,8 @@ public class SubjectService {
         if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
         }
+
+        progressProducer.sendDeleteProgressEvent(id);
 
         subjectRepository.deleteById(id);
     }
@@ -145,7 +203,7 @@ public class SubjectService {
         subjectCopy.setGrading4(subject.getGrading4());
         subjectCopy.setGrading3(subject.getGrading3());
         subjectCopy.setGradingMin(subject.getGradingMin());
-        subjectCopy.setTargetGrade(3);
+        subjectCopy.setTargetGrade(1);
         subjectCopy.setPublicity(Publicity.PRIVATE);
 
         subjectCopy.setSearchString(subject.getSearchString());
@@ -162,6 +220,7 @@ public class SubjectService {
             taskCopy.setMaxGrade(task.getMaxGrade());
             taskCopy.setReceivedGrade(0);
             taskCopy.setGradeWeight(task.getGradeWeight());
+
             taskCopy.setPosition(task.getPosition());
 
             taskCopy.setSubject(subjectCopy);
@@ -184,6 +243,19 @@ public class SubjectService {
         subjectCopy.setLinks(linksCopy);
 
         subjectRepository.save(subjectCopy);
+
+        progressProducer.sendCreateProgressEvent(
+                subjectCopy.getId(),
+                0.0, 0.0,
+                subjectCopy.getGradingType(),
+                EvaluationType.TOTAL,
+                subjectCopy.getTargetGrade(),
+                subjectCopy.getGradingMax(),
+                subjectCopy.getGrading5(),
+                subjectCopy.getGrading4(),
+                subjectCopy.getGrading3(),
+                subjectCopy.getGradingMin()
+        );
 
         return subjectCopy.getId();
     }

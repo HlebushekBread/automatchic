@@ -12,11 +12,13 @@
     <artifactId>common-module</artifactId>
 
     <dependencies>
-        <!-- Для создания топиков и DTO -->
+        <!-- Kafka -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
+
+        <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>

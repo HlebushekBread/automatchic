@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: history-service
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    driver: org.postgresql.Driver
+    url: ${HISTORY_DB_URL}
+    username: ${HISTORY_DB_USERNAME}
+    password: ${HISTORY_DB_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  kafka:
+    bootstrap-servers: ${BROKER_URL}
+    admin:
+      fail-fast: false
+    producer:
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: ${spring.application.name}-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "net.softloaf.automatchic.common.dto"
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration/history
+    postgresql:
+      transactional:
+        lock: true
+
+axon:
+  serializer:
+    general: jackson
+    events: jackson
+    messages: jackson
+
+logging:
+  level:
+    org.flywaydb: DEBUG
+    org.springframework.cache: TRACE

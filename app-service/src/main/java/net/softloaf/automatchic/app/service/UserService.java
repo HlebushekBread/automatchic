@@ -3,7 +3,9 @@ package net.softloaf.automatchic.app.service;
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.app.dto.request.NewUserRequest;
 import net.softloaf.automatchic.app.dto.request.UserUpdateRequest;
-import net.softloaf.automatchic.app.model.Role;
+import net.softloaf.automatchic.app.model.Subject;
+import net.softloaf.automatchic.app.service.producer.ProgressProducer;
+import net.softloaf.automatchic.common.enums.Role;
 import net.softloaf.automatchic.app.model.User;
 import net.softloaf.automatchic.app.repository.UserRepository;
 import net.softloaf.automatchic.app.service.producer.NotificationProducer;
@@ -19,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Locale;
-
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -32,6 +32,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final NotificationProducer notificationProducer;
     private final CacheManager cacheManager;
+    private final ProgressProducer progressProducer;
 
     @Transactional
     public void saveNewUser(NewUserRequest newUserRequest) {
@@ -86,6 +87,10 @@ public class UserService {
 
         if (user.getId() != sessionService.getCurrentUserId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
+        }
+
+        for(Subject subject : user.getSubjects()) {
+            progressProducer.sendDeleteProgressEvent(subject.getId());
         }
 
         userRepository.deleteById(id);

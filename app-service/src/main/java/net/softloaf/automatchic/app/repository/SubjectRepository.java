@@ -1,7 +1,6 @@
 package net.softloaf.automatchic.app.repository;
 
-import net.softloaf.automatchic.app.model.GradingType;
-import net.softloaf.automatchic.app.model.Publicity;
+import net.softloaf.automatchic.common.enums.GradingType;
 import net.softloaf.automatchic.app.model.Subject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
