@@ -33,3 +33,6 @@ build/
 ### VS Code ###
 .vscode/
 .env
+/docker-compose/axon-config/
+/docker-compose/axon-data/
+/docker-compose/axon-events/
