@@ -13,6 +13,7 @@ public class SubjectBasicResponse {
     private String name;
     private String teacher;
     private String gradingType;
+    private String evaluationType;
     private String publicity;
     private UserBasicResponse user;
     private Integer tasksAmount;
@@ -23,6 +24,7 @@ public class SubjectBasicResponse {
         this.name = subject.getName();
         this.teacher = subject.getTeacher();
         this.gradingType = subject.getGradingType().toString();
+        this.evaluationType = subject.getEvaluationType().toString();
         this.publicity = subject.getPublicity().toString();
         this.user = new UserBasicResponse(subject.getUser());
         this.tasksAmount = subject.getTasks().size();

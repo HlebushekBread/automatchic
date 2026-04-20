@@ -3,6 +3,7 @@ package net.softloaf.automatchic.app.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.softloaf.automatchic.common.enums.EvaluationType;
 import net.softloaf.automatchic.common.enums.GradingType;
 import net.softloaf.automatchic.common.enums.Publicity;
 
@@ -30,6 +31,10 @@ public class Subject {
     @Enumerated(EnumType.STRING)
     @Column(name = "grading_type")
     private GradingType gradingType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "evaluation_type")
+    private EvaluationType evaluationType;
 
     @Column(name = "grading_max")
     private double gradingMax;

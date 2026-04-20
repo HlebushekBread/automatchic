@@ -107,12 +107,10 @@ public class SubjectService {
         }
         subject.setGradingType(GradingType.valueOf(subjectRequest.getGradingType()));
 
-        /*
         if(!subjectCreation && !subject.getEvaluationType().toString().equals(subjectRequest.getEvaluationType())) {
             progressProducer.sendUpdateEvaluationTypeEvent(subject.getId(), EvaluationType.valueOf(subjectRequest.getEvaluationType()));
         }
-        subject.setEvaluationType(subjectRequest.getEvaluationType());
-         */
+        subject.setEvaluationType(EvaluationType.valueOf(subjectRequest.getEvaluationType()));
 
         if(!subjectCreation && subject.getTargetGrade() != subjectRequest.getTargetGrade()) {
             progressProducer.sendUpdateTargetGradeEvent(subject.getId(), subjectRequest.getTargetGrade());
@@ -154,7 +152,7 @@ public class SubjectService {
                     subject.getId(),
                     0.0, 0.0,
                     subject.getGradingType(),
-                    EvaluationType.TOTAL,
+                    subject.getEvaluationType(),
                     subject.getTargetGrade(),
                     subject.getGradingMax(),
                     subject.getGrading5(),
@@ -248,7 +246,7 @@ public class SubjectService {
                 subjectCopy.getId(),
                 0.0, 0.0,
                 subjectCopy.getGradingType(),
-                EvaluationType.TOTAL,
+                subjectCopy.getEvaluationType(),
                 subjectCopy.getTargetGrade(),
                 subjectCopy.getGradingMax(),
                 subjectCopy.getGrading5(),

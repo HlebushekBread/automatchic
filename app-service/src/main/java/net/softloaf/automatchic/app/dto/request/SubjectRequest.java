@@ -9,11 +9,12 @@ public class SubjectRequest {
     private String teacher;
     private String description;
     private String gradingType;
+    private String evaluationType;
+    private int targetGrade;
     private double gradingMax;
     private double grading5;
     private double grading4;
     private double grading3;
     private double gradingMin;
-    private int targetGrade;
     private String publicity;
 }
