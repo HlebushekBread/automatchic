@@ -30,18 +30,18 @@ SET default_table_access_method = heap;
 CREATE TABLE public.progress_history (
     id bigint NOT NULL,
     subject_id bigint NOT NULL,
-    total_score double precision DEFAULT 0 NOT NULL,
-    total_weight double precision DEFAULT 0 NOT NULL,
-    grading_type character varying DEFAULT 'GRADE'::character varying NOT NULL,
-    evaluation_type character varying DEFAULT 'TOTAL'::character varying NOT NULL,
-    target_grade integer DEFAULT 1 NOT NULL,
-    grading_max double precision DEFAULT 5 NOT NULL,
-    grading_5 double precision DEFAULT 5 NOT NULL,
-    grading_4 double precision DEFAULT 4 NOT NULL,
-    grading_3 double precision DEFAULT 3 NOT NULL,
-    grading_min double precision DEFAULT 0 NOT NULL,
-    event_type character varying NOT NULL,
-    "timestamp" timestamp without time zone NOT NULL
+    score_delta double precision,
+    weight_delta double precision,
+    grading_type character varying,
+    evaluation_type character varying,
+    target_grade integer,
+    grading_max double precision,
+    grading_5 double precision,
+    grading_4 double precision,
+    grading_3 double precision,
+    grading_min double precision,
+    event_type character varying,
+    "timestamp" timestamp without time zone
 );
 
 
@@ -90,25 +90,6 @@ ALTER TABLE public.progress_view OWNER TO postgres;
 -- Data for Name: progress_history; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.progress_history (id, subject_id, total_score, total_weight, grading_type, evaluation_type, target_grade, grading_max, grading_5, grading_4, grading_3, grading_min, event_type, "timestamp") FROM stdin;
-\.
-
-
---
--- TOC entry 5033 (class 0 OID 42028)
--- Dependencies: 221
--- Data for Name: progress_view; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.progress_view (subject_id, total_score, total_weight, grading_type, evaluation_type, target_grade, grading_max, grading_5, grading_4, grading_3, grading_min) FROM stdin;
-\.
-
-
---
--- TOC entry 5039 (class 0 OID 0)
--- Dependencies: 220
--- Name: progress_history_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
 
 SELECT pg_catalog.setval('public.progress_history_id_seq', 1, false);
 

@@ -1,11 +1,10 @@
-package net.softloaf.automatchic.history.service.consumer;
+package net.softloaf.automatchic.history.command.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.softloaf.automatchic.common.config.KafkaConfig;
-import net.softloaf.automatchic.common.dto.ProgressUpdateEvent;
+import net.softloaf.automatchic.common.dto.event.ProgressUpdateEvent;
 import net.softloaf.automatchic.history.command.*;
-import net.softloaf.automatchic.history.event.ProgressDeletedEvent;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;

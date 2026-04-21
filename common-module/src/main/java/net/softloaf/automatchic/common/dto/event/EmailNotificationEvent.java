@@ -1,4 +1,4 @@
-package net.softloaf.automatchic.common.dto;
+package net.softloaf.automatchic.common.dto.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -4,7 +4,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.softloaf.automatchic.common.config.KafkaConfig;
-import net.softloaf.automatchic.common.dto.EmailNotificationEvent;
+import net.softloaf.automatchic.common.dto.event.EmailNotificationEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

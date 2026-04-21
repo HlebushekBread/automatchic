@@ -2,7 +2,7 @@ package net.softloaf.automatchic.app.service.producer;
 
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.common.config.KafkaConfig;
-import net.softloaf.automatchic.common.dto.EmailNotificationEvent;
+import net.softloaf.automatchic.common.dto.event.EmailNotificationEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

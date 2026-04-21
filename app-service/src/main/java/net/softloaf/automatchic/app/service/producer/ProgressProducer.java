@@ -8,7 +8,7 @@ import net.softloaf.automatchic.common.enums.EventType;
 import net.softloaf.automatchic.common.enums.GradingType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import net.softloaf.automatchic.common.dto.ProgressUpdateEvent;
+import net.softloaf.automatchic.common.dto.event.ProgressUpdateEvent;
 
 import java.time.Instant;
 

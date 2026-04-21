@@ -17,7 +17,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "net.softloaf.automatchic.common.dto"
+        spring.json.trusted.packages: "net.softloaf.automatchic.common.dto.event"
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}

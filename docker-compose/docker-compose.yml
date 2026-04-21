@@ -160,8 +160,7 @@ services:
     image: axoniq/axonserver
     container_name: axonserver-automatchic
     ports:
-      - "8024:8024"
-      - "8124:8124"
+      - "1341:8024"
     volumes:
       - ./axon-data:/axonserver/data
       - ./axon-events:/axonserver/events

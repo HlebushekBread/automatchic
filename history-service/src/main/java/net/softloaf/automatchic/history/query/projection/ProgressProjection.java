@@ -25,7 +25,25 @@ public class ProgressProjection {
     public void on(ProgressCreatedEvent e) {
         ProgressView view = new ProgressView(e);
         progressViewRepository.save(view);
-        progressHistoryRepository.save(new ProgressHistoryEntry(view, EventType.CREATE, e.timestamp()));
+
+        progressHistoryRepository.save(
+                ProgressHistoryEntry.
+                        builder().
+                        subjectId(e.subjectId()).
+                        scoreDelta(e.totalScore()).
+                        weightDelta(e.totalWeight()).
+                        gradingType(e.gradingType()).
+                        evaluationType(e.evaluationType()).
+                        targetGrade(e.targetGrade()).
+                        gradingMax(e.gradingMax()).
+                        grading5(e.grading5()).
+                        grading4(e.grading4()).
+                        grading3(e.grading3()).
+                        gradingMin(e.gradingMin()).
+                        eventType(EventType.CREATE).
+                        timestamp(e.timestamp()).
+                        build()
+        );
     }
 
     @Transactional
@@ -36,7 +54,16 @@ public class ProgressProjection {
         view.setTotalWeight(view.getTotalWeight() + e.weightDelta());
         progressViewRepository.save(view);
 
-        progressHistoryRepository.save(new ProgressHistoryEntry(view, EventType.SCORE_UPDATE, e.timestamp()));
+        progressHistoryRepository.save(
+                ProgressHistoryEntry.
+                        builder().
+                        subjectId(e.subjectId()).
+                        scoreDelta(e.scoreDelta()).
+                        weightDelta(e.weightDelta()).
+                        eventType(EventType.SCORE_UPDATE).
+                        timestamp(e.timestamp()).
+                        build()
+        );
     }
 
     @Transactional
@@ -46,7 +73,15 @@ public class ProgressProjection {
         view.setTargetGrade(e.targetGrade());
         progressViewRepository.save(view);
 
-        progressHistoryRepository.save(new ProgressHistoryEntry(view, EventType.TARGET_GRADE_UPDATE, e.timestamp()));
+        progressHistoryRepository.save(
+                ProgressHistoryEntry.
+                        builder().
+                        subjectId(e.subjectId()).
+                        targetGrade(e.targetGrade()).
+                        eventType(EventType.TARGET_GRADE_UPDATE).
+                        timestamp(e.timestamp()).
+                        build()
+        );
     }
 
     @Transactional
@@ -60,7 +95,19 @@ public class ProgressProjection {
         view.setGradingMin(e.gradingMin());
         progressViewRepository.save(view);
 
-        progressHistoryRepository.save(new ProgressHistoryEntry(view, EventType.GRADINGS_UPDATE, e.timestamp()));
+        progressHistoryRepository.save(
+                ProgressHistoryEntry.
+                        builder().
+                        subjectId(e.subjectId()).
+                        gradingMax(e.gradingMax()).
+                        grading5(e.grading5()).
+                        grading4(e.grading4()).
+                        grading3(e.grading3()).
+                        gradingMin(e.gradingMin()).
+                        eventType(EventType.GRADINGS_UPDATE).
+                        timestamp(e.timestamp()).
+                        build()
+        );
     }
 
     @Transactional
@@ -70,7 +117,15 @@ public class ProgressProjection {
         view.setGradingType(e.gradingType());
         progressViewRepository.save(view);
 
-        progressHistoryRepository.save(new ProgressHistoryEntry(view, EventType.GRADING_TYPE_UPDATE, e.timestamp()));
+        progressHistoryRepository.save(
+                ProgressHistoryEntry.
+                        builder().
+                        subjectId(e.subjectId()).
+                        gradingType(e.gradingType()).
+                        eventType(EventType.GRADING_TYPE_UPDATE).
+                        timestamp(e.timestamp()).
+                        build()
+        );
     }
 
     @Transactional
@@ -80,7 +135,15 @@ public class ProgressProjection {
         view.setEvaluationType(e.evaluationType());
         progressViewRepository.save(view);
 
-        progressHistoryRepository.save(new ProgressHistoryEntry(view, EventType.EVALUATION_TYPE_UPDATE, e.timestamp()));
+        progressHistoryRepository.save(
+                ProgressHistoryEntry.
+                        builder().
+                        subjectId(e.subjectId()).
+                        evaluationType(e.evaluationType()).
+                        eventType(EventType.EVALUATION_TYPE_UPDATE).
+                        timestamp(e.timestamp()).
+                        build()
+        );
     }
 
     @Transactional
@@ -88,5 +151,13 @@ public class ProgressProjection {
     public void on(ProgressDeletedEvent e) {
         progressViewRepository.deleteById(e.subjectId());
         //progressHistoryRepository.deleteAllBySubjectId(e.subjectId());
+        progressHistoryRepository.save(
+                ProgressHistoryEntry.
+                        builder().
+                        subjectId(e.subjectId()).
+                        eventType(EventType.DELETE).
+                        timestamp(e.timestamp()).
+                        build()
+        );
     }
 }

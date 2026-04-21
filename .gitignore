@@ -3,7 +3,14 @@ backend/target/
 .mvn/wrapper/maven-wrapper.jar
 !app-service/src/main/**/target/
 !app-service/src/test/**/target/
+!notification-service/src/main/**/target/
+!notification-service/src/test/**/target/
+!history-service/src/main/**/target/
+!history-service/src/test/**/target/
 docker-compose/alertmanager.yml
+docker-compose/axon-config/
+docker-compose/axon-data/
+docker-compose/axon-events/
 
 ### STS ###
 .apt_generated
@@ -29,10 +36,11 @@ docker-compose/alertmanager.yml
 build/
 !app-service/src/main/**/build/
 !app-service/src/test/**/build/
+!notification-service/src/main/**/build/
+!notification-service/src/test/**/build/
+!history-service/src/main/**/build/
+!history-service/src/test/**/build/
 
 ### VS Code ###
 .vscode/
 .env
-/docker-compose/axon-config/
-/docker-compose/axon-data/
-/docker-compose/axon-events/
