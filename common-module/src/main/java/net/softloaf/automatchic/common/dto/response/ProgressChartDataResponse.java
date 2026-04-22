@@ -13,6 +13,8 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 public class ProgressChartDataResponse {
+    // Info
+    private ProgressSnapshotResponse snapshot;
     // X
     private Instant timestampX;
     // Y
@@ -23,11 +25,10 @@ public class ProgressChartDataResponse {
     private Double grading4Y;
     private Double grading3Y;
     private Double gradingMinY;
-    // Info
-    private String gradingType;
-    private String evaluationType;
 
     public ProgressChartDataResponse(Instant timestamp, ProgressSnapshotResponse snapshot) {
+        this.setSnapshot(snapshot);
+
         this.timestampX = timestamp;
 
         double p100 = snapshot.getGradingMax() > 0 ? snapshot.getGradingMax() : 1;
@@ -63,8 +64,5 @@ public class ProgressChartDataResponse {
                 this.targetGradeY = this.gradingMinY;
                 break;
         }
-
-        this.gradingType = snapshot.getGradingType();
-        this.evaluationType = snapshot.getEvaluationType();
     }
 }

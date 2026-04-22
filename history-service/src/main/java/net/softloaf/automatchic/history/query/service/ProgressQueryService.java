@@ -1,4 +1,4 @@
-package net.softloaf.automatchic.history.query;
+package net.softloaf.automatchic.history.query.service;
 
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.common.dto.response.ProgressChartDataResponse;
@@ -121,6 +121,13 @@ public class ProgressQueryService {
             result.add(new ProgressChartDataResponse(pointInstant, currentSnapshot));
 
             currentPoint = currentPoint.plus(interval);
+        }
+
+        if (!result.isEmpty()) {
+            ProgressChartDataResponse lastPoint = result.getLast();
+            Instant nextInstant = lastPoint.getTimestampX().plus(interval);
+
+            result.add(new ProgressChartDataResponse(nextInstant, lastPoint.getSnapshot()));
         }
 
         return result;

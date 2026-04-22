@@ -1,4 +1,4 @@
-package net.softloaf.automatchic.history.query;
+package net.softloaf.automatchic.history.query.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

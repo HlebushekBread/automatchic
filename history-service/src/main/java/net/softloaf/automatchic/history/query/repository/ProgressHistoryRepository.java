@@ -1,7 +1,7 @@
-package net.softloaf.automatchic.history.query;
+package net.softloaf.automatchic.history.query.repository;
 
+import net.softloaf.automatchic.history.query.model.ProgressHistoryEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -4,15 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import net.softloaf.automatchic.common.enums.EventType;
 import net.softloaf.automatchic.history.event.*;
-import net.softloaf.automatchic.history.query.ProgressHistoryEntry;
-import net.softloaf.automatchic.history.query.ProgressHistoryRepository;
-import net.softloaf.automatchic.history.query.ProgressView;
-import net.softloaf.automatchic.history.query.ProgressViewRepository;
+import net.softloaf.automatchic.history.query.model.ProgressHistoryEntry;
+import net.softloaf.automatchic.history.query.repository.ProgressHistoryRepository;
+import net.softloaf.automatchic.history.query.model.ProgressView;
+import net.softloaf.automatchic.history.query.repository.ProgressViewRepository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
 
 @RequiredArgsConstructor
 @Component

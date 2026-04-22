@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ProgressConsumer {
+public class ProgressCommandConsumer {
 
     private final CommandGateway commandGateway;
 
