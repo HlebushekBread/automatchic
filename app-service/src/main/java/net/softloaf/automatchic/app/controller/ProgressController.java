@@ -1,6 +1,7 @@
 package net.softloaf.automatchic.app.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.softloaf.automatchic.app.service.ProgressService;
 import net.softloaf.automatchic.common.dto.response.ProgressChartDataResponse;
 import net.softloaf.automatchic.common.dto.response.ProgressSnapshotResponse;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,21 +18,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/progress")
 public class ProgressController {
-    private final RestClient historyClient;
+    private final ProgressService progressService;
 
     @GetMapping("/{subjectId}/history")
     public List<ProgressSnapshotResponse> getHistory(@PathVariable long subjectId) {
-        return historyClient.get()
-                .uri("/{subjectId}/history", subjectId)
-                .retrieve()
-                .body(new ParameterizedTypeReference<List<ProgressSnapshotResponse>>() {});
+        return progressService.getHistory(subjectId);
     }
 
-    @GetMapping("/{subjectId}/chart")
-    public List<ProgressChartDataResponse> getChartData(@PathVariable Long subjectId) {
-        return historyClient.get()
-                .uri("/{subjectId}/chart", subjectId)
-                .retrieve()
-                .body(new ParameterizedTypeReference<List<ProgressChartDataResponse>>() {});
+    @GetMapping("/{subjectId}/chart/{interval}")
+    public List<ProgressChartDataResponse> getChartData(@PathVariable Long subjectId, @PathVariable Integer interval) {
+        return progressService.getChartData(subjectId, interval);
     }
 }

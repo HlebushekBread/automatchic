@@ -26,24 +26,24 @@ public class ProgressQueryController {
     private final ProgressQueryService progressQueryService;
 
     @GetMapping("/db/{subjectId}")
-    public ResponseEntity<ProgressView> getDbSnapshot(@PathVariable long subjectId) {
+    public ResponseEntity<ProgressView> getDbSnapshot(@PathVariable Long subjectId) {
         return progressViewRepository.findById(subjectId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/db/{subjectId}/history")
-    public List<ProgressHistoryEntry> getDbHistory(@PathVariable long subjectId) {
+    public List<ProgressHistoryEntry> getDbHistory(@PathVariable Long subjectId) {
         return progressHistoryRepository.findAllBySubjectIdOrderByTimestampAsc(subjectId);
     }
 
     @GetMapping("/{subjectId}/history")
-    public List<ProgressSnapshotResponse> getHistory(@PathVariable long subjectId) {
+    public List<ProgressSnapshotResponse> getHistory(@PathVariable Long subjectId) {
         return progressQueryService.buildTimeline(subjectId);
     }
 
-    @GetMapping("/{subjectId}/chart")
-    public List<ProgressChartDataResponse> getChartData(@PathVariable long subjectId) {
-        return progressQueryService.buildChartPoints(subjectId, Duration.ofSeconds(10));
+    @GetMapping("/{subjectId}/chart/{interval}")
+    public List<ProgressChartDataResponse> getChartData(@PathVariable Long subjectId, @PathVariable Integer interval) {
+        return progressQueryService.buildChartPoints(subjectId, Duration.ofMillis(interval));
     }
 }

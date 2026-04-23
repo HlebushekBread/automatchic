@@ -107,6 +107,8 @@ public class ProgressQueryService {
         int index = 0;
         ProgressSnapshotResponse currentSnapshot = timeline.getFirst();
 
+        ProgressSnapshotResponse lastAddedSnapshot = null;
+
         while (!currentPoint.toInstant().isAfter(now)) {
 
             Instant pointInstant = currentPoint.toInstant();
@@ -118,14 +120,17 @@ public class ProgressQueryService {
                 index++;
             }
 
-            result.add(new ProgressChartDataResponse(pointInstant, currentSnapshot));
+            if (lastAddedSnapshot == null || !lastAddedSnapshot.equals(currentSnapshot)) {
+                result.add(new ProgressChartDataResponse(pointInstant, currentSnapshot));
+                lastAddedSnapshot = currentSnapshot;
+            }
 
             currentPoint = currentPoint.plus(interval);
         }
 
         if (!result.isEmpty()) {
             ProgressChartDataResponse lastPoint = result.getLast();
-            Instant nextInstant = lastPoint.getTimestampX().plus(interval);
+            Instant nextInstant = Instant.now();//lastPoint.getTimestampX().plus(interval);
 
             result.add(new ProgressChartDataResponse(nextInstant, lastPoint.getSnapshot()));
         }

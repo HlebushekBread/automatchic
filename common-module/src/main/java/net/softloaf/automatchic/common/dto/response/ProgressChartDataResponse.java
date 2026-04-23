@@ -1,5 +1,6 @@
 package net.softloaf.automatchic.common.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +14,11 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 public class ProgressChartDataResponse {
+    @JsonIgnore
+    ProgressSnapshotResponse snapshot;
     // Info
-    private ProgressSnapshotResponse snapshot;
+    private Double currentScoreReal;
+    private Double targetScoreReal;
     // X
     private Instant timestampX;
     // Y
@@ -36,8 +40,13 @@ public class ProgressChartDataResponse {
 
         double currentScore = snapshot.getTotalScore();
         if(EvaluationType.valueOf(snapshot.getEvaluationType()) == EvaluationType.AVERAGE) {
-            currentScore /= snapshot.getTotalWeight();
+            if(snapshot.getTotalWeight() != 0) {
+                currentScore /= snapshot.getTotalWeight();
+            } else {
+                currentScore = 0;
+            }
         }
+        this.currentScoreReal = currentScore;
 
         this.currentScoreY = currentScore / (p100 - p0);
 
@@ -49,18 +58,23 @@ public class ProgressChartDataResponse {
 
         switch (snapshot.getTargetGrade()) {
             case 4:
+                this.targetScoreReal = snapshot.getGradingMax();
                 this.targetGradeY = this.gradingMaxY;
                 break;
             case 3:
+                this.targetScoreReal = snapshot.getGrading5();
                 this.targetGradeY = this.grading5Y;
                 break;
             case 2:
+                this.targetScoreReal = snapshot.getGrading4();
                 this.targetGradeY = this.grading4Y;
                 break;
             case 1:
+                this.targetScoreReal = snapshot.getGrading3();
                 this.targetGradeY = this.grading3Y;
                 break;
             case 0:
+                this.targetScoreReal = snapshot.getGradingMin();
                 this.targetGradeY = this.gradingMinY;
                 break;
         }
