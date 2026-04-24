@@ -99,7 +99,7 @@ CREATE TABLE public.task (
     id bigint NOT NULL,
     name character varying DEFAULT 'Название'::character varying NOT NULL,
     type character varying DEFAULT 'HOMEWORK'::character varying NOT NULL,
-    due_date timestamp with time zone,
+    due_date timestamp without time zone,
     max_grade double precision DEFAULT 5,
     received_grade double precision DEFAULT 0,
     grade_weight double precision DEFAULT 1,
