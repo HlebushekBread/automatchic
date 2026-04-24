@@ -18,6 +18,7 @@ import net.softloaf.automatchic.app.security.UserDetailsImpl;
 import net.softloaf.automatchic.app.security.UserDetailsServiceImpl;
 import net.softloaf.automatchic.app.service.UserService;
 import net.softloaf.automatchic.app.service.util.SessionService;
+import net.softloaf.automatchic.common.dto.response.ErrorResponse;
 import net.softloaf.automatchic.common.metrics.Metrics;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/auth")
-@Tag(name = "Авторизация", description = "Управления авторизацией, подтверждениями и паролем")
+@Tag(name = "Аутентификация", description = "Управления Аутентификацией, подтверждениями и паролем")
 public class AuthController {
 
     private final UserService userService;
@@ -49,22 +50,36 @@ public class AuthController {
                             description = "Успешная авторизация",
                             content = @Content(schema = @Schema(implementation = JwtResponse.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Неверные данные пользователя")
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Неверные данные пользователя",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "400",
+                                          "message": "Неверный ID",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    )
             }
     )
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthToken(
+    public JwtResponse createAuthToken(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Логин и пароль пользователя",
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = AuthRequest.class),
                             examples = @ExampleObject(value = """
-                            {
-                              "username": "user@mail.com",
-                              "password": "123456"
-                            }
-                            """)
+                                {
+                                  "username": "user@mail.com",
+                                  "password": "123456"
+                                }
+                                """
+                            )
                     )
             )
             @RequestBody AuthRequest authRequest
@@ -83,7 +98,7 @@ public class AuthController {
         }
 
         String token = jwtUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        return new JwtResponse(token);
     }
 
     @Operation(
@@ -95,25 +110,66 @@ public class AuthController {
                             description = "Пользователь успешно зарегистрирован",
                             content = @Content(schema = @Schema(implementation = JwtResponse.class))
                     ),
-                    @ApiResponse(responseCode = "409", description = "Пользователь уже существует"),
-                    @ApiResponse(responseCode = "422", description = "Логин или пароль null")
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Пустые логин или пароль",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "400",
+                                          "message": "Логин и пароль не могут быть пустыми",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "Пользователь уже существует",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "409",
+                                          "message": "Пользователь уже существует",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "422",
+                            description = "Логин или пароль null",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "422",
+                                          "message": "Логин и пароль не могут быть null",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    )
             }
     )
     @PostMapping("/register")
-    public ResponseEntity<?> saveNewUser(
+    public JwtResponse saveNewUser(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Данные нового пользователя",
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = NewUserRequest.class),
                             examples = @ExampleObject(value = """
-                            {
-                              "username": "user@mail.com",
-                              "password": "123456",
-                              "fullName": "Иван Иванов",
-                              "group": "БИВТ-23-СП-3"
-                            }
-                            """)
+                                {
+                                  "username": "user@mail.com",
+                                  "password": "123456",
+                                  "fullName": "Иван Иванов",
+                                  "group": "БИВТ-23-СП-3"
+                                }
+                                """
+                            )
                     )
             )
             @RequestBody NewUserRequest newUserRequest
@@ -135,15 +191,45 @@ public class AuthController {
         }
 
         String token = jwtUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        return new JwtResponse(token);
     }
 
     @Operation(
             summary = "Повторная отправка письма подтверждения",
             description = "Отправляет письмо подтверждения текущему авторизованному пользователю.",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Письмо отправлено"),
-                    @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Письмо отправлено"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Неавторизованный запрос",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "401",
+                                          "message": "Неавторизованный запрос",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Пользователь не найден",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "404",
+                                          "message": "Неверный ID пользователя",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    )
             }
     )
     @GetMapping("/resend")
@@ -156,8 +242,38 @@ public class AuthController {
             summary = "Подтверждение email",
             description = "Подтверждает аккаунт пользователя по токену.",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Email подтвержден"),
-                    @ApiResponse(responseCode = "410", description = "Токен недействителен")
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Email подтвержден"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Неверный Username",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "404",
+                                          "message": "Неверный Username",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "410",
+                            description = "Токен недействителен",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "410",
+                                          "message": "Невалидный токен",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    )
             }
     )
     @PostMapping("/confirm")
@@ -174,8 +290,24 @@ public class AuthController {
             summary = "Запрос на восстановление пароля",
             description = "Отправляет письмо со ссылкой для сброса пароля.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Письмо отправлено"),
-                    @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Письмо отправлено"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Пользователь не найден",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "404",
+                                          "message": "Неверный ID пользователя",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    )
             }
     )
     @PostMapping("/forgot-password")
@@ -184,15 +316,45 @@ public class AuthController {
             @RequestBody String username
     ) {
         userService.sendPasswordResetEmail(username);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(
             summary = "Сброс пароля",
             description = "Устанавливает новый пароль по токену восстановления.",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Пароль успешно изменен"),
-                    @ApiResponse(responseCode = "410", description = "Токен недействителен")
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Пароль успешно изменен"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Неверный Username",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "404",
+                                          "message": "Неверный Username",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "410",
+                            description = "Токен недействителен",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": "410",
+                                          "message": "Невалидный токен",
+                                          "timestamp": "0"
+                                        }
+                                        """
+                                    )
+                            )
+                    )
             }
     )
     @PostMapping("/reset-password")
@@ -203,11 +365,12 @@ public class AuthController {
                     content = @Content(
                             schema = @Schema(implementation = ResetPasswordRequest.class),
                             examples = @ExampleObject(value = """
-                            {
-                              "token": "16763be4-6022-406e-a950-fcd5018633ca",
-                              "password": "newPassword123"
-                            }
-                            """)
+                                {
+                                  "token": "16763be4-6022-406e-a950-fcd5018633ca",
+                                  "password": "newPassword123"
+                                }
+                                """
+                            )
                     )
             )
             @RequestBody ResetPasswordRequest resetPasswordRequest

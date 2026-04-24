@@ -1,11 +1,13 @@
 # Автоматчик - Трекер учебных требований
-## <a href="http://softloaf.net">softloaf.net</a>
+## <a href="http://softloaf.net">Ссылка на сайт</a>
 
 Домашний Spring boot проект, построенный на микросервисной event-driven архитектуре <br>
 с использованием Kafka, со сбором и отображением метрик через Prometheus и Grafana. <br>
 Просмотр прогресса реализован через CQRS и Event Sourcing с помощью Axon. <br>
+Присутствует документация (Swagger). <br>
 
-#### <a href="https://github.com/HlebushekBread/automatchic_web">Frontend часть</a>
+#### <a href="http://softloaf.net:1337/swagger-ui/index.html#">Swagger-ui</a>
+#### <a href="https://github.com/HlebushekBread/automatchic_web">Репозиторий Frontend части</a>
 
 ---
 
@@ -33,6 +35,7 @@
 - Работа с PostgreSQL
 - Кэширование через Redis
 - Публикация событий в Kafka
+- Центральная точка доступа к API
 
 ### 2. `history-service`
 - Хранение истории изменений
@@ -44,7 +47,7 @@
 - Подписка на события Kafka
 - Отправка email уведомлений
 
-### 4. `common-module`
+### `common-module`
 - Общие DTO
 - конфигурация Kafka
 - Enum и shared логика
@@ -57,12 +60,14 @@
 - Spring Boot
 - Spring Security
 - Spring Data JPA
-- Apache Kafka
-- Axon Framework
+- Swagger
 - PostgreSQL
 - Redis
+- Apache Kafka
+- Axon Framework
 - Docker & Docker Compose
 - Prometheus + Grafana + Alertmanager
+- CQRS + Event Sourcing
 
 ---
 

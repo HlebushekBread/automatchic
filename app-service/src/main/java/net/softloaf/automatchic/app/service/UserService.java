@@ -67,7 +67,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void sendConfirmationEmail(long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
         if(user.isConfirmed()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Пользователь уже подтвержден");
         }
@@ -76,14 +76,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void sendPasswordResetEmail(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
 
         notificationProducer.sendPasswordResetEmail(user.getUsername(), passwordResetTokenService.generateToken(user.getUsername()));
     }
 
     @Transactional
     public void deleteUser(long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
 
         if (user.getId() != sessionService.getCurrentUserId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
@@ -120,7 +120,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public boolean checkConfirmed(long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
 
         return user.isConfirmed();
     }
