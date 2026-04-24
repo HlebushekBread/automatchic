@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -45,7 +46,7 @@ public class User {
 
     @CreatedDate
     @Column(name = "registered_at")
-    private LocalDateTime registeredAt;
+    private ZonedDateTime registeredAt;
 
     @Column(name = "search_string")
     private String searchString;

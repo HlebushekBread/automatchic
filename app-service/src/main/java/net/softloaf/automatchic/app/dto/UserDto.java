@@ -10,6 +10,7 @@ import net.softloaf.automatchic.app.model.User;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +27,7 @@ public class UserDto implements Serializable {
     private String group;
     private Role role;
     private Boolean isConfirmed;
-    private LocalDateTime registeredAt;
+    private ZonedDateTime registeredAt;
 
     public UserDto(User user) {
         this.id = user.getId();

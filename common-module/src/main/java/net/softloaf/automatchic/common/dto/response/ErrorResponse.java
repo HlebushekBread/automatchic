@@ -1,4 +1,4 @@
-package net.softloaf.automatchic.app.exception;
+package net.softloaf.automatchic.common.dto.response;
 
 import lombok.Data;
 

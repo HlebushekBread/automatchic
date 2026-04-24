@@ -94,9 +94,14 @@ public class ProgressQueryService {
         ZonedDateTime zdt = first.atZone(ZoneId.systemDefault());
 
         long intervalSeconds = interval.getSeconds();
-        long epochSeconds = zdt.toEpochSecond();
 
-        long remainder = epochSeconds % intervalSeconds;
+        ZonedDateTime startOfDay = zdt.toLocalDate()
+                .atStartOfDay(zdt.getZone());
+
+        long secondsFromDayStart =
+                Duration.between(startOfDay, zdt).getSeconds();
+
+        long remainder = secondsFromDayStart % intervalSeconds;
 
         ZonedDateTime currentPoint = zdt
                 .minusSeconds(remainder)

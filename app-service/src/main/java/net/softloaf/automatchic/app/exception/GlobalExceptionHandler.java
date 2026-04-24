@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
-        ErrorResponse error = new ErrorResponse(
+    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
+        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(
                 e.getStatusCode().value(),
                 e.getReason()
         );
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(InternalAuthenticationServiceException e) {
+    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleAuthenticationException(InternalAuthenticationServiceException e) {
         String input = e.getMessage();
 
         int status = 500;
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
             }
         }
 
-        ErrorResponse error = new ErrorResponse(status, message);
+        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(status, message);
         HttpStatus httpStatus;
         try {
             httpStatus = HttpStatus.valueOf(status);
@@ -53,8 +53,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
-        ErrorResponse error = new ErrorResponse(500, "Внутренняя ошибка сервера");
+    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleGeneralException(Exception e) {
+        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(500, "Внутренняя ошибка сервера");
         log.error(e.getMessage());
         return ResponseEntity.internalServerError().body(error);
     }

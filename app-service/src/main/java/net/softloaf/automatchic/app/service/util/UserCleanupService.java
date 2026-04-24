@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -23,7 +24,7 @@ public class UserCleanupService {
     @Transactional
     public void removeUnverifiedUsers() {
         log.info("Запуск очистки базы...");
-        LocalDateTime cutoff = LocalDateTime.now().minusDays(1);
+        ZonedDateTime cutoff = ZonedDateTime.now().minusDays(1);
 
         int deletedCount = userRepository.deleteByIsConfirmedFalseAndRegisteredAtBefore(cutoff);
 

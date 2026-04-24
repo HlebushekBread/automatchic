@@ -11,8 +11,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
-        ErrorResponse error = new ErrorResponse(
+    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
+        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(
                 e.getStatusCode().value(),
                 e.getReason()
         );
@@ -21,8 +21,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
-        ErrorResponse error = new ErrorResponse(500, "Внутренняя ошибка сервера");
+    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleGeneralException(Exception e) {
+        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(500, "Внутренняя ошибка сервера");
         log.error(e.getMessage());
         return ResponseEntity.internalServerError().body(error);
     }
