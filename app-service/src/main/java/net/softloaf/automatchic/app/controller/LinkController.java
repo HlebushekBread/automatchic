@@ -42,9 +42,9 @@ public class LinkController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "400",
+                                          "status": 400,
                                           "message": "Достигнут лимит ссылок",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -57,9 +57,9 @@ public class LinkController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Нет прав на удаление",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -72,9 +72,9 @@ public class LinkController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID ссылки",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -121,9 +121,9 @@ public class LinkController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Нет прав на удаление",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -136,9 +136,9 @@ public class LinkController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID ссылки",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )

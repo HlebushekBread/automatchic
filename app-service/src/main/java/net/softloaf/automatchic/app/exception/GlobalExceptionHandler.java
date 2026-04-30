@@ -7,6 +7,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
+import net.softloaf.automatchic.common.dto.response.ErrorResponse;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,8 +17,8 @@ import java.util.regex.Pattern;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
-        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
+        ErrorResponse error = new ErrorResponse(
                 e.getStatusCode().value(),
                 e.getReason()
         );
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleAuthenticationException(InternalAuthenticationServiceException e) {
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(InternalAuthenticationServiceException e) {
         String input = e.getMessage();
 
         int status = 500;
@@ -41,7 +42,7 @@ public class GlobalExceptionHandler {
             }
         }
 
-        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(status, message);
+        ErrorResponse error = new ErrorResponse(status, message);
         HttpStatus httpStatus;
         try {
             httpStatus = HttpStatus.valueOf(status);
@@ -53,8 +54,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<net.softloaf.automatchic.common.dto.response.ErrorResponse> handleGeneralException(Exception e) {
-        net.softloaf.automatchic.common.dto.response.ErrorResponse error = new net.softloaf.automatchic.common.dto.response.ErrorResponse(500, "Внутренняя ошибка сервера");
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
+        ErrorResponse error = new ErrorResponse(500, "Внутренняя ошибка сервера");
         log.error(e.getMessage());
         return ResponseEntity.internalServerError().body(error);
     }

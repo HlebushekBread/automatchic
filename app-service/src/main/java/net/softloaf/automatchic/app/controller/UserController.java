@@ -45,9 +45,9 @@ public class UserController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Нет прав на удаление",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -60,9 +60,9 @@ public class UserController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID пользователя",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -90,16 +90,10 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            description = "Неавторизован",
+                            description = "Неавторизованный запрос",
                             content = @Content(
-                                    schema = @Schema(implementation = ErrorResponse.class),
-                                    examples = @ExampleObject(value = """
-                                        {
-                                          "status": "401",
-                                          "message": "Неавторизованный запрос",
-                                          "timestamp": "0"
-                                        }
-                                        """
+                                    schema = @Schema(
+                                            implementation = Void.class
                                     )
                             )
                     )
@@ -122,16 +116,10 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            description = "Неавторизован",
+                            description = "Неавторизованный запрос",
                             content = @Content(
-                                    schema = @Schema(implementation = ErrorResponse.class),
-                                    examples = @ExampleObject(value = """
-                                        {
-                                          "status": "401",
-                                          "message": "Неавторизованный запрос",
-                                          "timestamp": "0"
-                                        }
-                                        """
+                                    schema = @Schema(
+                                            implementation = Void.class
                                     )
                             )
                     )
@@ -179,16 +167,10 @@ public class UserController {
                     ),
                     @ApiResponse(
                             responseCode = "401",
-                            description = "Неавторизован",
+                            description = "Неавторизованный запрос",
                             content = @Content(
-                                    schema = @Schema(implementation = ErrorResponse.class),
-                                    examples = @ExampleObject(value = """
-                                        {
-                                          "status": "401",
-                                          "message": "Неавторизованный запрос",
-                                          "timestamp": "0"
-                                        }
-                                        """
+                                    schema = @Schema(
+                                            implementation = Void.class
                                     )
                             )
                     )

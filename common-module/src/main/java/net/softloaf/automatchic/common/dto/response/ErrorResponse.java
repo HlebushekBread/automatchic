@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class ErrorResponse {
-    private int status;
+    private Integer status;
     private String message;
-    private long timestamp;
+    private Long timestamp;
 
     public ErrorResponse(int status, String message) {
         this.status = status;

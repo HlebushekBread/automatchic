@@ -21,20 +21,20 @@
       {
         "kind": "AnnotationQuery",
         "spec": {
-          "query": {
-            "kind": "DataQuery",
-            "group": "grafana",
-            "version": "v0",
-            "datasource": {
-              "name": "-- Grafana --"
-            },
-            "spec": {}
-          },
+          "builtIn": true,
           "enable": true,
           "hide": true,
           "iconColor": "rgba(0, 211, 255, 1)",
           "name": "Annotations & Alerts",
-          "builtIn": true
+          "query": {
+            "datasource": {
+              "name": "-- Grafana --"
+            },
+            "group": "grafana",
+            "kind": "DataQuery",
+            "spec": {},
+            "version": "v0"
+          }
         }
       }
     ],
@@ -44,10 +44,6 @@
       "panel-1": {
         "kind": "Panel",
         "spec": {
-          "id": 1,
-          "title": "CPU usage (app-service)",
-          "description": "",
-          "links": [],
           "data": {
             "kind": "QueryGroup",
             "spec": {
@@ -55,34 +51,65 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "system_cpu_usage",
                         "legendFormat": "__auto",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "A",
-                    "hidden": false
+                    "refId": "A"
                   }
                 }
               ],
-              "transformations": [],
-              "queryOptions": {}
+              "queryOptions": {},
+              "transformations": []
             }
           },
+          "description": "",
+          "id": 1,
+          "links": [],
+          "title": "CPU usage (app-service)",
           "vizConfig": {
-            "kind": "VizConfig",
             "group": "gauge",
-            "version": "13.0.0",
+            "kind": "VizConfig",
             "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "max": 1,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "percentage",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 50
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  },
+                  "unit": "percentunit"
+                },
+                "overrides": []
+              },
               "options": {
                 "barShape": "flat",
                 "barWidthFactor": 0.3,
@@ -110,46 +137,15 @@
                 "sizing": "auto",
                 "sparkline": true,
                 "textMode": "auto"
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "unit": "percentunit",
-                  "min": 0,
-                  "max": 1,
-                  "thresholds": {
-                    "mode": "percentage",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 50,
-                        "color": "yellow"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "palette-classic"
-                  }
-                },
-                "overrides": []
               }
-            }
+            },
+            "version": "13.0.0"
           }
         }
       },
       "panel-2": {
         "kind": "Panel",
         "spec": {
-          "id": 2,
-          "title": "Current users",
-          "description": "",
-          "links": [],
           "data": {
             "kind": "QueryGroup",
             "spec": {
@@ -157,56 +153,74 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "app_users_confirmed_current",
                         "legendFormat": "Confirmed users",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "Confirmed",
-                    "hidden": false
+                    "refId": "Confirmed"
                   }
                 },
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "app_users_unconfirmed_current",
                         "instant": false,
                         "legendFormat": "Unconfirmed users",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "Unconfirmed",
-                    "hidden": false
+                    "refId": "Unconfirmed"
                   }
                 }
               ],
-              "transformations": [],
-              "queryOptions": {}
+              "queryOptions": {},
+              "transformations": []
             }
           },
+          "description": "",
+          "id": 2,
+          "links": [],
+          "title": "Current users",
           "vizConfig": {
-            "kind": "VizConfig",
             "group": "piechart",
-            "version": "13.0.0",
+            "kind": "VizConfig",
             "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "custom": {
+                    "hideFrom": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": false
+                    }
+                  }
+                },
+                "overrides": []
+              },
               "options": {
                 "displayLabels": [
                   "percent",
@@ -231,33 +245,15 @@
                   "mode": "single",
                   "sort": "none"
                 }
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "color": {
-                    "mode": "palette-classic"
-                  },
-                  "custom": {
-                    "hideFrom": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": false
-                    }
-                  }
-                },
-                "overrides": []
               }
-            }
+            },
+            "version": "13.0.0"
           }
         }
       },
       "panel-3": {
         "kind": "Panel",
         "spec": {
-          "id": 3,
-          "title": "Content volume",
-          "description": "",
-          "links": [],
           "data": {
             "kind": "QueryGroup",
             "spec": {
@@ -265,78 +261,102 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "app_subjects_current",
                         "legendFormat": "Current subjects",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "Subjects",
-                    "hidden": false
+                    "refId": "Subjects"
                   }
                 },
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "app_tasks_current",
                         "instant": false,
                         "legendFormat": "Current tasks",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "Tasks",
-                    "hidden": false
+                    "refId": "Tasks"
                   }
                 },
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "app_links_current",
                         "instant": false,
                         "legendFormat": "Current links",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "Links",
-                    "hidden": false
+                    "refId": "Links"
                   }
                 }
               ],
-              "transformations": [],
-              "queryOptions": {}
+              "queryOptions": {},
+              "transformations": []
             }
           },
+          "description": "",
+          "id": 3,
+          "links": [],
+          "title": "Content volume",
           "vizConfig": {
-            "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.0",
+            "kind": "VizConfig",
             "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
               "options": {
                 "colorMode": "value",
                 "graphMode": "area",
@@ -353,39 +373,15 @@
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "palette-classic"
-                  }
-                },
-                "overrides": []
               }
-            }
+            },
+            "version": "13.0.0"
           }
         }
       },
       "panel-4": {
         "kind": "Panel",
         "spec": {
-          "id": 4,
-          "title": "Kafka lag (email confirmation)",
-          "description": "",
-          "links": [],
           "data": {
             "kind": "QueryGroup",
             "spec": {
@@ -393,35 +389,61 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "kafka_consumergroup_lag{topic=\"email-confirmation-topic\"}",
                         "interval": "",
                         "legendFormat": "Partition {{partition}}",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "A",
-                    "hidden": false
+                    "refId": "A"
                   }
                 }
               ],
-              "transformations": [],
-              "queryOptions": {}
+              "queryOptions": {},
+              "transformations": []
             }
           },
+          "description": "",
+          "id": 4,
+          "links": [],
+          "title": "Kafka lag (email confirmation)",
           "vizConfig": {
-            "kind": "VizConfig",
             "group": "bargauge",
-            "version": "13.0.0",
+            "kind": "VizConfig",
             "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "max": 100,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
               "options": {
                 "displayMode": "lcd",
                 "legend": {
@@ -445,41 +467,15 @@
                 "showUnfilled": true,
                 "sizing": "auto",
                 "valueMode": "color"
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "min": 0,
-                  "max": 100,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "palette-classic"
-                  }
-                },
-                "overrides": []
               }
-            }
+            },
+            "version": "13.0.0"
           }
         }
       },
       "panel-5": {
         "kind": "Panel",
         "spec": {
-          "id": 5,
-          "title": "Kafka lag (password reset)",
-          "description": "",
-          "links": [],
           "data": {
             "kind": "QueryGroup",
             "spec": {
@@ -487,35 +483,61 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
-                        "expr": "kafka_consumergroup_lag{topic=\"password-reset-topic\"}",
+                        "expr": "kafka_consumergroup_lag{topic=\"progress-topic\"}",
                         "interval": "",
                         "legendFormat": "Partition {{partition}}",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "A",
-                    "hidden": false
+                    "refId": "A"
                   }
                 }
               ],
-              "transformations": [],
-              "queryOptions": {}
+              "queryOptions": {},
+              "transformations": []
             }
           },
+          "description": "",
+          "id": 5,
+          "links": [],
+          "title": "Kafka lag (progress events)",
           "vizConfig": {
-            "kind": "VizConfig",
             "group": "bargauge",
-            "version": "13.0.0",
+            "kind": "VizConfig",
             "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "max": 100,
+                  "min": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
               "options": {
                 "displayMode": "lcd",
                 "legend": {
@@ -539,41 +561,15 @@
                 "showUnfilled": true,
                 "sizing": "auto",
                 "valueMode": "color"
-              },
-              "fieldConfig": {
-                "defaults": {
-                  "min": 0,
-                  "max": 100,
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
-                  "color": {
-                    "mode": "palette-classic"
-                  }
-                },
-                "overrides": []
               }
-            }
+            },
+            "version": "13.0.0"
           }
         }
       },
       "panel-6": {
         "kind": "Panel",
         "spec": {
-          "id": 6,
-          "title": "Users registration increase",
-          "description": "",
-          "links": [],
           "data": {
             "kind": "QueryGroup",
             "spec": {
@@ -581,66 +577,39 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "code",
                         "expr": "increase(app_users_registered_total[5m])",
                         "legendFormat": "Registrations increase in 5m",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "A",
-                    "hidden": false
+                    "refId": "A"
                   }
                 }
               ],
-              "transformations": [],
-              "queryOptions": {}
+              "queryOptions": {},
+              "transformations": []
             }
           },
+          "description": "",
+          "id": 6,
+          "links": [],
+          "title": "Users registration increase",
           "vizConfig": {
-            "kind": "VizConfig",
             "group": "timeseries",
-            "version": "13.0.0",
+            "kind": "VizConfig",
             "spec": {
-              "options": {
-                "annotations": {
-                  "clustering": -1,
-                  "multiLane": false
-                },
-                "legend": {
-                  "calcs": [],
-                  "displayMode": "list",
-                  "placement": "bottom",
-                  "showLegend": true
-                },
-                "tooltip": {
-                  "hideZeros": false,
-                  "mode": "single",
-                  "sort": "none"
-                }
-              },
               "fieldConfig": {
                 "defaults": {
-                  "thresholds": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "value": 0,
-                        "color": "green"
-                      },
-                      {
-                        "value": 80,
-                        "color": "red"
-                      }
-                    ]
-                  },
                   "color": {
                     "mode": "palette-classic"
                   },
@@ -677,21 +646,48 @@
                     "thresholdsStyle": {
                       "mode": "off"
                     }
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
                   }
                 },
                 "overrides": []
+              },
+              "options": {
+                "annotations": {
+                  "clustering": -1,
+                  "multiLane": false
+                },
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": true
+                },
+                "tooltip": {
+                  "hideZeros": false,
+                  "mode": "single",
+                  "sort": "none"
+                }
               }
-            }
+            },
+            "version": "13.0.0"
           }
         }
       },
       "panel-7": {
         "kind": "Panel",
         "spec": {
-          "id": 7,
-          "title": "Unconfirmed users cleaned",
-          "description": "",
-          "links": [],
           "data": {
             "kind": "QueryGroup",
             "spec": {
@@ -699,34 +695,58 @@
                 {
                   "kind": "PanelQuery",
                   "spec": {
+                    "hidden": false,
                     "query": {
-                      "kind": "DataQuery",
-                      "group": "prometheus",
-                      "version": "v0",
                       "datasource": {
                         "name": "Prometheus"
                       },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
                       "spec": {
                         "editorMode": "builder",
                         "expr": "app_users_cleaned_total",
                         "legendFormat": "Total users cleaned",
                         "range": true
-                      }
+                      },
+                      "version": "v0"
                     },
-                    "refId": "A",
-                    "hidden": false
+                    "refId": "A"
                   }
                 }
               ],
-              "transformations": [],
-              "queryOptions": {}
+              "queryOptions": {},
+              "transformations": []
             }
           },
+          "description": "",
+          "id": 7,
+          "links": [],
+          "title": "Unconfirmed users cleaned",
           "vizConfig": {
-            "kind": "VizConfig",
             "group": "stat",
-            "version": "13.0.0",
+            "kind": "VizConfig",
             "spec": {
+              "fieldConfig": {
+                "defaults": {
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": 0
+                      },
+                      {
+                        "color": "red",
+                        "value": 80
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
               "options": {
                 "colorMode": "value",
                 "graphMode": "area",
@@ -743,29 +763,103 @@
                 "showPercentChange": false,
                 "textMode": "auto",
                 "wideLayout": true
-              },
+              }
+            },
+            "version": "13.0.0"
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "hidden": false,
+                    "query": {
+                      "datasource": {
+                        "name": "Prometheus"
+                      },
+                      "group": "prometheus",
+                      "kind": "DataQuery",
+                      "spec": {
+                        "editorMode": "builder",
+                        "expr": "kafka_consumergroup_lag{topic=\"password-reset-topic\"}",
+                        "interval": "",
+                        "legendFormat": "Partition {{partition}}",
+                        "range": true
+                      },
+                      "version": "v0"
+                    },
+                    "refId": "A"
+                  }
+                }
+              ],
+              "queryOptions": {},
+              "transformations": []
+            }
+          },
+          "description": "",
+          "id": 8,
+          "links": [],
+          "title": "Kafka lag (password reset)",
+          "vizConfig": {
+            "group": "bargauge",
+            "kind": "VizConfig",
+            "spec": {
               "fieldConfig": {
                 "defaults": {
+                  "color": {
+                    "mode": "palette-classic"
+                  },
+                  "max": 100,
+                  "min": 0,
                   "thresholds": {
                     "mode": "absolute",
                     "steps": [
                       {
-                        "value": 0,
-                        "color": "green"
+                        "color": "green",
+                        "value": 0
                       },
                       {
-                        "value": 80,
-                        "color": "red"
+                        "color": "red",
+                        "value": 80
                       }
                     ]
-                  },
-                  "color": {
-                    "mode": "thresholds"
                   }
                 },
                 "overrides": []
+              },
+              "options": {
+                "displayMode": "lcd",
+                "legend": {
+                  "calcs": [],
+                  "displayMode": "list",
+                  "placement": "bottom",
+                  "showLegend": false
+                },
+                "maxVizHeight": 300,
+                "minVizHeight": 16,
+                "minVizWidth": 8,
+                "namePlacement": "auto",
+                "orientation": "horizontal",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "showUnfilled": true,
+                "sizing": "auto",
+                "valueMode": "color"
               }
-            }
+            },
+            "version": "13.0.0"
           }
         }
       }
@@ -777,92 +871,105 @@
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 0,
-              "y": 0,
-              "width": 7,
-              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-1"
-              }
+              },
+              "height": 9,
+              "width": 7,
+              "x": 0,
+              "y": 0
             }
           },
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 7,
-              "y": 0,
-              "width": 6,
-              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-2"
-              }
+              },
+              "height": 9,
+              "width": 6,
+              "x": 7,
+              "y": 0
             }
           },
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 13,
-              "y": 0,
-              "width": 11,
-              "height": 9,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-3"
-              }
+              },
+              "height": 9,
+              "width": 11,
+              "x": 13,
+              "y": 0
             }
           },
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 0,
-              "y": 9,
-              "width": 7,
-              "height": 8,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-4"
-              }
+              },
+              "height": 8,
+              "width": 8,
+              "x": 0,
+              "y": 9
             }
           },
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 7,
-              "y": 9,
-              "width": 7,
+              "element": {
+                "kind": "ElementReference",
+                "name": "panel-8"
+              },
               "height": 8,
+              "width": 8,
+              "x": 8,
+              "y": 9
+            }
+          },
+          {
+            "kind": "GridLayoutItem",
+            "spec": {
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-5"
-              }
+              },
+              "height": 8,
+              "width": 8,
+              "x": 16,
+              "y": 9
             }
           },
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 14,
-              "y": 9,
-              "width": 10,
-              "height": 8,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-6"
-              }
+              },
+              "height": 8,
+              "width": 10,
+              "x": 0,
+              "y": 17
             }
           },
           {
             "kind": "GridLayoutItem",
             "spec": {
-              "x": 0,
-              "y": 17,
-              "width": 5,
-              "height": 8,
               "element": {
                 "kind": "ElementReference",
                 "name": "panel-7"
-              }
+              },
+              "height": 8,
+              "width": 5,
+              "x": 10,
+              "y": 17
             }
           }
         ]
@@ -870,12 +977,17 @@
     },
     "links": [],
     "liveNow": false,
+    "preferences": {
+      "layout": {
+        "kind": "GridLayout",
+        "spec": {
+          "items": []
+        }
+      }
+    },
     "preload": false,
     "tags": [],
     "timeSettings": {
-      "timezone": "browser",
-      "from": "now-15m",
-      "to": "now",
       "autoRefresh": "5s",
       "autoRefreshIntervals": [
         "5s",
@@ -889,18 +1001,13 @@
         "2h",
         "1d"
       ],
+      "fiscalYearStartMonth": 0,
+      "from": "now-15m",
       "hideTimepicker": false,
-      "fiscalYearStartMonth": 0
+      "timezone": "browser",
+      "to": "now"
     },
     "title": "App service metrics",
-    "variables": [],
-    "preferences": {
-      "layout": {
-        "kind": "GridLayout",
-        "spec": {
-          "items": []
-        }
-      }
-    }
+    "variables": []
   }
 }

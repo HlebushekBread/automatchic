@@ -27,7 +27,7 @@ public class UserDto implements Serializable {
     private String group;
     private Role role;
     private Boolean isConfirmed;
-    private ZonedDateTime registeredAt;
+    private LocalDateTime registeredAt;
 
     public UserDto(User user) {
         this.id = user.getId();

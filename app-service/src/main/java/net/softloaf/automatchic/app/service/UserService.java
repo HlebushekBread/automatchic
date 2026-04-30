@@ -76,7 +76,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void sendPasswordResetEmail(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный username пользователя"));
 
         notificationProducer.sendPasswordResetEmail(user.getUsername(), passwordResetTokenService.generateToken(user.getUsername()));
     }

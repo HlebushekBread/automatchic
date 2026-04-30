@@ -24,7 +24,7 @@ public class UserCleanupService {
     @Transactional
     public void removeUnverifiedUsers() {
         log.info("Запуск очистки базы...");
-        ZonedDateTime cutoff = ZonedDateTime.now().minusDays(1);
+        LocalDateTime cutoff = LocalDateTime.now().minusDays(1);
 
         int deletedCount = userRepository.deleteByIsConfirmedFalseAndRegisteredAtBefore(cutoff);
 

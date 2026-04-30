@@ -56,9 +56,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "400",
+                                          "status": 400,
                                           "message": "Неверный ID",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -116,9 +116,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "400",
+                                          "status": 400,
                                           "message": "Логин и пароль не могут быть пустыми",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -130,9 +130,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "409",
+                                          "status": 409,
                                           "message": "Пользователь уже существует",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -144,9 +144,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "422",
+                                          "status": 422,
                                           "message": "Логин и пароль не могут быть null",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -208,9 +208,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "401",
+                                          "status": 401,
                                           "message": "Неавторизованный запрос",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -222,9 +222,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID пользователя",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -252,9 +252,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный Username",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -266,9 +266,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "410",
+                                          "status": 410,
                                           "message": "Невалидный токен",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -300,9 +300,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
-                                          "message": "Неверный ID пользователя",
-                                          "timestamp": "0"
+                                          "status": 404,
+                                          "message": "Неверный username пользователя",
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -333,9 +333,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный Username",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -347,9 +347,9 @@ public class AuthController {
                             content = @Content(schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "410",
+                                          "status": 410,
                                           "message": "Невалидный токен",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )

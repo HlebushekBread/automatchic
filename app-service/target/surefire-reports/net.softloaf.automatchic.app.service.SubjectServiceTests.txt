@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: net.softloaf.automatchic.app.service.SubjectServiceTests
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.531 s -- in net.softloaf.automatchic.app.service.SubjectServiceTests

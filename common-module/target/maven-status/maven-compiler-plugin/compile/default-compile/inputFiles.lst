@@ -1,6 +1,11 @@
 C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\config\KafkaConfig.java
-C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\dto\EmailNotificationEvent.java
+C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\dto\event\EmailNotificationEvent.java
+C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\dto\event\ProgressUpdateEvent.java
+C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\dto\response\ErrorResponse.java
+C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\dto\response\ProgressChartDataResponse.java
+C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\dto\response\ProgressSnapshotResponse.java
 C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\enums\EvaluationType.java
+C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\enums\EventType.java
 C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\enums\GradingType.java
 C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\enums\Publicity.java
 C:\projects\automatchic\automatchic\common-module\src\main\java\net\softloaf\automatchic\common\enums\Role.java

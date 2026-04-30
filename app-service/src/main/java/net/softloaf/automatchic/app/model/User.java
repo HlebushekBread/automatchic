@@ -46,7 +46,7 @@ public class User {
 
     @CreatedDate
     @Column(name = "registered_at")
-    private ZonedDateTime registeredAt;
+    private LocalDateTime registeredAt;
 
     @Column(name = "search_string")
     private String searchString;

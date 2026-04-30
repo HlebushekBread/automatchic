@@ -14,12 +14,10 @@ import net.softloaf.automatchic.app.dto.response.SubjectBasicResponse;
 import net.softloaf.automatchic.app.dto.response.SubjectFullResponse;
 import net.softloaf.automatchic.app.service.SubjectService;
 import net.softloaf.automatchic.common.dto.response.ErrorResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/subjects")
@@ -45,9 +43,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Доступ запрещен",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -60,9 +58,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID дисциплины",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -89,15 +87,24 @@ public class SubjectController {
                             content = @Content(schema = @Schema(implementation = SubjectFullResponse.class))
                     ),
                     @ApiResponse(
+                            responseCode = "401",
+                            description = "Неавторизованный запрос",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Void.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
                             responseCode = "403",
                             description = "Нет доступа",
                             content = @Content(
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Нет прав на предпросмотр",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -110,9 +117,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID дисциплины",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -173,9 +180,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "401",
+                                          "status": 401,
                                           "message": "Неавторизованный запрос",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -204,11 +211,20 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "400",
+                                          "status": 400,
                                           "message": "Достигнут лимит дисциплин",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Неавторизованный запрос",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Void.class
                                     )
                             )
                     ),
@@ -219,9 +235,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Нет прав на редактирование",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -234,9 +250,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID дисциплины",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -287,15 +303,24 @@ public class SubjectController {
                             content = @Content(schema = @Schema(implementation = IdResponse.class))
                     ),
                     @ApiResponse(
+                            responseCode = "401",
+                            description = "Неавторизованный запрос",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Void.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
                             responseCode = "403",
                             description = "Нет прав",
                             content = @Content(
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Нет прав на копирование",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -308,9 +333,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID дисциплины",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -337,15 +362,24 @@ public class SubjectController {
                             description = "Удалено"
                     ),
                     @ApiResponse(
+                            responseCode = "401",
+                            description = "Неавторизованный запрос",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Void.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
                             responseCode = "403",
                             description = "Нет прав",
                             content = @Content(
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "403",
+                                          "status": 403,
                                           "message": "Нет прав на удаление",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )
@@ -358,9 +392,9 @@ public class SubjectController {
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
                                         {
-                                          "status": "404",
+                                          "status": 404,
                                           "message": "Неверный ID дисциплины",
-                                          "timestamp": "0"
+                                          "timestamp": 0
                                         }
                                         """
                                     )

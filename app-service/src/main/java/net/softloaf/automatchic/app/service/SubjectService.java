@@ -196,12 +196,13 @@ public class SubjectService {
         subjectCopy.setTeacher(subject.getTeacher());
         subjectCopy.setDescription(subject.getDescription());
         subjectCopy.setGradingType(subject.getGradingType());
+        subjectCopy.setEvaluationType(subject.getEvaluationType());
+        subjectCopy.setTargetGrade(1);
         subjectCopy.setGradingMax(subject.getGradingMax());
         subjectCopy.setGrading5(subject.getGrading5());
         subjectCopy.setGrading4(subject.getGrading4());
         subjectCopy.setGrading3(subject.getGrading3());
         subjectCopy.setGradingMin(subject.getGradingMin());
-        subjectCopy.setTargetGrade(1);
         subjectCopy.setPublicity(Publicity.PRIVATE);
 
         subjectCopy.setSearchString(subject.getSearchString());
