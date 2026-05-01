@@ -70,8 +70,8 @@ public class SubjectController {
     )
     @GetMapping("/{id}/view")
     public SubjectFullResponse getSubjectViewById(
-            @PathVariable
             @Parameter(description = "ID дисциплины")
+            @PathVariable
             long id
     ) {
         return subjectService.findById(false, id);
@@ -129,8 +129,8 @@ public class SubjectController {
     )
     @GetMapping("/{id}/preview")
     public SubjectFullResponse getSubjectPreviewById(
-            @PathVariable
             @Parameter(description = "ID дисциплины")
+            @PathVariable
             long id
     ) {
         return subjectService.findById(true, id);
@@ -196,8 +196,8 @@ public class SubjectController {
     }
 
     @Operation(
-            summary = "Создать или обновить дисциплину",
-            description = "Создает новую дисциплину либо обновляет существующую.",
+            summary = "Создать дисциплину",
+            description = "Создает новую дисциплину.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -218,6 +218,58 @@ public class SubjectController {
                                         """
                                     )
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Неавторизованный запрос",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Void.class
+                                    )
+                            )
+                    )
+            }
+    )
+    @PostMapping("/new")
+    public IdResponse createSubject(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Данные дисциплины",
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = SubjectRequest.class),
+                            examples = @ExampleObject(value = """
+                                {
+                                  "name": "Математический анализ",
+                                  "teacher": "Иванов И.И.",
+                                  "description": "Основной курс",
+                                  "gradingType": "EXAM",
+                                  "evaluationType": "TOTAL",
+                                  "targetGrade": 3,
+                                  "gradingMax": 100,
+                                  "grading5": 85,
+                                  "grading4": 70,
+                                  "grading3": 50,
+                                  "gradingMin": 0,
+                                  "publicity": "PRIVATE"
+                                }
+                                """
+                            )
+                    )
+            )
+            @RequestBody SubjectRequest subjectRequest
+    ) {
+        long response = subjectService.create(subjectRequest);
+        return new IdResponse(response);
+    }
+
+    @Operation(
+            summary = "Обновить дисциплину",
+            description = "Обновляет существующую дисциплину.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Сохранено",
+                            content = @Content(schema = @Schema(implementation = Void.class))
                     ),
                     @ApiResponse(
                             responseCode = "401",
@@ -260,8 +312,10 @@ public class SubjectController {
                     )
             }
     )
-    @PutMapping("/save")
-    public IdResponse saveSubject(
+    @PutMapping("/{id}/update")
+    public ResponseEntity<?> saveSubject(
+            @Parameter(description = "ID исходной дисциплины")
+            @PathVariable long id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Данные дисциплины",
                     required = true,
@@ -269,7 +323,6 @@ public class SubjectController {
                             schema = @Schema(implementation = SubjectRequest.class),
                             examples = @ExampleObject(value = """
                                 {
-                                  "id": 0,
                                   "name": "Математический анализ",
                                   "teacher": "Иванов И.И.",
                                   "description": "Основной курс",
@@ -289,8 +342,8 @@ public class SubjectController {
             )
             @RequestBody SubjectRequest subjectRequest
     ) {
-        long response = subjectService.save(subjectRequest);
-        return new IdResponse(response);
+        subjectService.update(id, subjectRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(
@@ -345,8 +398,8 @@ public class SubjectController {
     )
     @GetMapping("/{id}/copy")
     public IdResponse copySubject(
-            @PathVariable
             @Parameter(description = "ID исходной дисциплины")
+            @PathVariable
             long id
     ) {
         long response = subjectService.copy(id);
@@ -404,8 +457,8 @@ public class SubjectController {
     )
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> deleteOrder(
-            @PathVariable
             @Parameter(description = "ID дисциплины для удаления")
+            @PathVariable
             long id
     ) {
         subjectService.delete(id);

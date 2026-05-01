@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class SubjectRequest {
-    private long id;
     private String name;
     private String teacher;
     private String description;

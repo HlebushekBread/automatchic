@@ -27,8 +27,8 @@ public class LinkController {
     private final LinkService linkService;
 
     @Operation(
-            summary = "Создать или обновить ссылку",
-            description = "Создает новую ссылку для дисциплины либо обновляет существующую.",
+            summary = "Создать ссылку",
+            description = "Создает новую ссылку для дисциплины.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -58,7 +58,7 @@ public class LinkController {
                                     examples = @ExampleObject(value = """
                                         {
                                           "status": 403,
-                                          "message": "Нет прав на удаление",
+                                          "message": "Нет прав на создание",
                                           "timestamp": 0
                                         }
                                         """
@@ -67,7 +67,72 @@ public class LinkController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Ссылка или дисциплина не найдены",
+                            description = "Дисциплина не найдена",
+                            content = @Content(
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": 404,
+                                          "message": "Неверный ID дисциплины",
+                                          "timestamp": 0
+                                        }
+                                        """
+                                    )
+                            )
+                    )
+            }
+    )
+    @PostMapping("/new/{subjectId}")
+    public IdResponse createLink(
+            @Parameter(description = "ID дисциплины")
+            @PathVariable long subjectId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Данные ссылки",
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = LinkRequest.class),
+                            examples = @ExampleObject(value = """
+                                {
+                                  "name": "Telegram чат",
+                                  "fullLink": "https://t.me/example"
+                                }
+                                """
+                            )
+                    )
+            )
+            @RequestBody LinkRequest linkRequest
+    ) {
+        long response = linkService.create(subjectId, linkRequest);
+        return new IdResponse(response);
+    }
+
+    @Operation(
+            summary = "Обновить ссылку",
+            description = "Обновляет существующую ссылку.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Ссылка успешно сохранена",
+                            content = @Content(schema = @Schema(implementation = Void.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Нет прав доступа",
+                            content = @Content(
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": 403,
+                                          "message": "Нет прав на редактирование",
+                                          "timestamp": 0
+                                        }
+                                        """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Ссылка не найдена",
                             content = @Content(
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
@@ -82,8 +147,10 @@ public class LinkController {
                     )
             }
     )
-    @PutMapping("/save")
-    public IdResponse saveTask(
+    @PutMapping("/{id}/update")
+    public ResponseEntity<?> updateLink(
+            @Parameter(description = "ID ссылки")
+            @PathVariable long id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Данные ссылки",
                     required = true,
@@ -91,10 +158,8 @@ public class LinkController {
                             schema = @Schema(implementation = LinkRequest.class),
                             examples = @ExampleObject(value = """
                                 {
-                                  "id": 0,
                                   "name": "Telegram чат",
-                                  "fullLink": "https://t.me/example",
-                                  "subjectId": 15
+                                  "fullLink": "https://t.me/example"
                                 }
                                 """
                             )
@@ -102,8 +167,8 @@ public class LinkController {
             )
             @RequestBody LinkRequest linkRequest
     ) {
-        long response = linkService.save(linkRequest);
-        return new IdResponse(response);
+        linkService.update(id, linkRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(

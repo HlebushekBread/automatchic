@@ -30,12 +30,12 @@ public class TaskController {
     private final SessionService sessionService;
 
     @Operation(
-            summary = "Создать или обновить задачу",
-            description = "Создает новую задачу либо обновляет существующую.",
+            summary = "Создать задачу",
+            description = "Создает новую задачу для дисциплины.",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Задача успешно сохранена",
+                            description = "Задача успешно создана",
                             content = @Content(schema = @Schema(implementation = IdResponse.class))
                     ),
                     @ApiResponse(
@@ -70,6 +70,84 @@ public class TaskController {
                                     examples = @ExampleObject(value = """
                                         {
                                           "status": 403,
+                                          "message": "Нет прав на создание",
+                                          "timestamp": 0
+                                        }
+                                        """
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Дисциплина не найдена",
+                            content = @Content(
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": 404,
+                                          "message": "Неверный ID дисциплины",
+                                          "timestamp": 0
+                                        }
+                                        """
+                                    )
+                            )
+                    )
+            }
+    )
+    @PostMapping("/new/{subjectId}")
+    public IdResponse createTask(
+            @Parameter(description = "ID дисциплины")
+            @PathVariable long subjectId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Данные задачи",
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = TaskRequest.class),
+                            examples = @ExampleObject(value = """
+                                {
+                                  "name": "Контрольная работа",
+                                  "type": "EXAM",
+                                  "dueDate": "2026-05-10T12:00:00",
+                                  "maxGrade": 100,
+                                  "receivedGrade": 0,
+                                  "gradeWeight": 1.0,
+                                  "position": 1
+                                }
+                                """
+                            )
+                    )
+            )
+            @RequestBody TaskRequest taskRequest
+    ) {
+        long response = taskService.create(subjectId, taskRequest);
+        return new IdResponse(response);
+    }
+
+    @Operation(
+            summary = "Обновить задачу",
+            description = "Обновляет существующую задачу.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "Задача успешно сохранена"
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Неавторизованный запрос",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = Void.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Нет прав доступа",
+                            content = @Content(
+                                    schema = @Schema(implementation = ErrorResponse.class),
+                                    examples = @ExampleObject(value = """
+                                        {
+                                          "status": 403,
                                           "message": "Нет прав на редактирование",
                                           "timestamp": 0
                                         }
@@ -79,7 +157,7 @@ public class TaskController {
                     ),
                     @ApiResponse(
                             responseCode = "404",
-                            description = "Задача или дисциплина не найдены",
+                            description = "Задача не найдена",
                             content = @Content(
                                     schema = @Schema(implementation = ErrorResponse.class),
                                     examples = @ExampleObject(value = """
@@ -94,8 +172,10 @@ public class TaskController {
                     )
             }
     )
-    @PutMapping("/save")
-    public IdResponse saveTask(
+    @PutMapping("/{id}/update")
+    public ResponseEntity<?> updateTask(
+            @Parameter(description = "ID задачи")
+            @PathVariable long id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Данные задачи",
                     required = true,
@@ -103,15 +183,13 @@ public class TaskController {
                             schema = @Schema(implementation = TaskRequest.class),
                             examples = @ExampleObject(value = """
                                 {
-                                  "id": 0,
                                   "name": "Контрольная работа",
                                   "type": "EXAM",
                                   "dueDate": "2026-05-10T12:00:00",
                                   "maxGrade": 100,
                                   "receivedGrade": 0,
                                   "gradeWeight": 1.0,
-                                  "position": 1,
-                                  "subjectId": 15
+                                  "position": 1
                                 }
                                 """
                             )
@@ -119,8 +197,8 @@ public class TaskController {
             )
             @RequestBody TaskRequest taskRequest
     ) {
-        long response = taskService.save(taskRequest);
-        return new IdResponse(response);
+        taskService.update(id, taskRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(

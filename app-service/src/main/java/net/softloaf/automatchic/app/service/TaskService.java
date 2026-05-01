@@ -27,49 +27,80 @@ public class TaskService {
     private final ProgressProducer progressProducer;
 
     @Transactional
-    public long save(TaskRequest taskRequest) {
+    public long create(long subjectId, TaskRequest request) {
 
-        Task task = (taskRequest.getId() != 0)
-                ? taskRepository.findById(taskRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID задачи"))
-                : new Task();
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
-        Subject subject = subjectRepository.findById(taskRequest.getSubjectId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
+        if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на создание");
+        }
 
-        if (taskRequest.getId() == 0) {
-            if (taskRepository.countBySubjectId(subject.getId()) >= 20) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит задач");
-            }
-        } else if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
+        if (taskRepository.countBySubjectId(subjectId) >= 20) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит задач");
+        }
+
+        Task task = new Task();
+
+        task.setName(request.getName());
+        task.setType(TaskType.valueOf(request.getType()));
+        task.setDueDate(request.getDueDate());
+        task.setMaxGrade(request.getMaxGrade());
+
+        task.setReceivedGrade(request.getReceivedGrade());
+        task.setGradeWeight(request.getGradeWeight());
+        task.setPosition(request.getPosition());
+        task.setSubject(subject);
+
+        taskRepository.save(task);
+
+        if (request.getReceivedGrade() > 0) {
+            double score = request.getReceivedGrade() * request.getGradeWeight();
+            double weight = request.getGradeWeight();
+
+            progressProducer.sendUpdateScoreEvent(subjectId, score, weight);
+        }
+
+        return task.getId();
+    }
+
+    @Transactional
+    public void update(long id, TaskRequest request) {
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID задачи"));
+
+        Subject subject = task.getSubject();
+
+        if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
         }
 
-        task.setName(taskRequest.getName());
-        task.setType(TaskType.valueOf(taskRequest.getType()));
-        task.setDueDate(taskRequest.getDueDate());
-        task.setMaxGrade(taskRequest.getMaxGrade());
+        task.setName(request.getName());
+        task.setType(TaskType.valueOf(request.getType()));
+        task.setDueDate(request.getDueDate());
+        task.setMaxGrade(request.getMaxGrade());
 
-        if(task.getReceivedGrade() != taskRequest.getReceivedGrade() || task.getGradeWeight() != taskRequest.getGradeWeight()) {
+        if(task.getReceivedGrade() != request.getReceivedGrade() || task.getGradeWeight() != request.getGradeWeight()) {
             double oldScore = task.getReceivedGrade() * task.getGradeWeight();
-            double newScore = taskRequest.getReceivedGrade() * taskRequest.getGradeWeight();
+            double newScore = request.getReceivedGrade() * request.getGradeWeight();
             double scoreDelta = newScore - oldScore;
 
             double oldWeight = task.getReceivedGrade() > 0 ? task.getGradeWeight() : 0;
-            double newWeight = taskRequest.getReceivedGrade() > 0 ? taskRequest.getGradeWeight() : 0;
+            double newWeight = request.getReceivedGrade() > 0 ? request.getGradeWeight() : 0;
             double weightDelta = newWeight - oldWeight;
 
             if(scoreDelta != 0 || weightDelta != 0) {
                 progressProducer.sendUpdateScoreEvent(subject.getId(), scoreDelta, weightDelta);
             }
         }
-        task.setReceivedGrade(taskRequest.getReceivedGrade());
-        task.setGradeWeight(taskRequest.getGradeWeight());
+        task.setReceivedGrade(request.getReceivedGrade());
+        task.setGradeWeight(request.getGradeWeight());
+        task.setPosition(request.getPosition());
 
-        task.setPosition(taskRequest.getPosition());
         task.setSubject(subject);
 
         taskRepository.save(task);
-
-        return task.getId();
     }
 
     @Transactional

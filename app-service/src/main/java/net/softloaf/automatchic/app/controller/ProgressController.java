@@ -68,13 +68,13 @@ public class ProgressController {
                     )
             }
     )
-    @GetMapping("/{subjectId}/history")
+    @GetMapping("/{id}/history")
     public List<ProgressSnapshotResponse> getHistory(
             @PathVariable
             @Parameter(description = "ID дисциплины")
-            long subjectId
+            long id
     ) {
-        return progressService.getHistory(subjectId);
+        return progressService.getHistory(id);
     }
 
     @Operation(
@@ -133,16 +133,16 @@ public class ProgressController {
                     )
             }
     )
-    @GetMapping("/{subjectId}/chart/{interval}")
+    @GetMapping("/{id}/chart/{interval}")
     public List<ProgressChartDataResponse> getChartData(
             @PathVariable
             @Parameter(description = "ID дисциплины")
-            Long subjectId,
+            Long id,
 
             @PathVariable
             @Parameter(description = "Интервал агрегации данных в миллисекундах")
             Integer interval
     ) {
-        return progressService.getChartData(subjectId, interval);
+        return progressService.getChartData(id, interval);
     }
 }

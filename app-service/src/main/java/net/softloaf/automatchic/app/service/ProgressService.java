@@ -23,22 +23,22 @@ public class ProgressService {
     private final SessionService sessionService;
     private final SubjectRepository subjectRepository;
 
-    public List<ProgressSnapshotResponse> getHistory(long subjectId) {
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
+    public List<ProgressSnapshotResponse> getHistory(long id) {
+        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
         if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Доступ запрещен");
         }
 
         return historyClient.get()
-                .uri("/{subjectId}/history", subjectId)
+                .uri("/{id}/history", id)
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<ProgressSnapshotResponse>>() {});
     }
 
-    public List<ProgressChartDataResponse> getChartData(Long subjectId, Integer interval) {
+    public List<ProgressChartDataResponse> getChartData(Long id, Integer interval) {
 
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
+        Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
         if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Доступ запрещен");
@@ -49,7 +49,7 @@ public class ProgressService {
         }
 
         return historyClient.get()
-                .uri("/{subjectId}/chart/{interval}", subjectId, interval)
+                .uri("/{id}/chart/{interval}", id, interval)
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<ProgressChartDataResponse>>() {});
     }

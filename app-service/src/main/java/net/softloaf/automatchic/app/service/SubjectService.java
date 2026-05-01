@@ -78,61 +78,27 @@ public class SubjectService {
     }
 
     @Transactional
-    public long save(SubjectRequest subjectRequest) {
-        boolean subjectCreation = false;
+    public long create(SubjectRequest subjectRequest) {
 
-        if (subjectRequest.getId() == 0) {
-            subjectCreation = true;
-            if (subjectRepository.countByUserId(sessionService.getCurrentUserId()) >= 10) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит дисциплин");
-            }
+        long userId = sessionService.getCurrentUserId();
+
+        if (subjectRepository.countByUserId(userId) >= 10) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит дисциплин");
         }
 
-        Subject subject = (subjectRequest.getId() != 0)
-                ? subjectRepository.findById(subjectRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"))
-                : new Subject();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
 
-        User user = userRepository.findById(sessionService.getCurrentUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID пользователя"));
-
-        if (subjectRequest.getId() != 0 && subject.getUser().getId() != sessionService.getCurrentUserId()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
-        }
+        Subject subject = new Subject();
 
         subject.setName(subjectRequest.getName());
         subject.setTeacher(subjectRequest.getTeacher());
         subject.setDescription(subjectRequest.getDescription());
 
-        if(!subjectCreation && !subject.getGradingType().toString().equals(subjectRequest.getGradingType())) {
-            progressProducer.sendUpdateGradingTypeEvent(subject.getId(), GradingType.valueOf(subjectRequest.getGradingType()));
-        }
         subject.setGradingType(GradingType.valueOf(subjectRequest.getGradingType()));
-
-        if(!subjectCreation && !subject.getEvaluationType().toString().equals(subjectRequest.getEvaluationType())) {
-            progressProducer.sendUpdateEvaluationTypeEvent(subject.getId(), EvaluationType.valueOf(subjectRequest.getEvaluationType()));
-        }
         subject.setEvaluationType(EvaluationType.valueOf(subjectRequest.getEvaluationType()));
-
-        if(!subjectCreation && subject.getTargetGrade() != subjectRequest.getTargetGrade()) {
-            progressProducer.sendUpdateTargetGradeEvent(subject.getId(), subjectRequest.getTargetGrade());
-        }
         subject.setTargetGrade(subjectRequest.getTargetGrade());
 
-        if(!subjectCreation && (
-                subject.getGradingMax() != subjectRequest.getGradingMax() ||
-                subject.getGrading5() != subjectRequest.getGrading5() ||
-                subject.getGrading4() != subjectRequest.getGrading4() ||
-                subject.getGrading3() != subjectRequest.getGrading3() ||
-                subject.getGradingMin() != subjectRequest.getGradingMin()
-                )
-        ) {
-            progressProducer.sendUpdateGradingsEvent(subject.getId(),
-                    subjectRequest.getGradingMax(),
-                    subjectRequest.getGrading5(),
-                    subjectRequest.getGrading4(),
-                    subjectRequest.getGrading3(),
-                    subjectRequest.getGradingMin()
-            );
-        }
         subject.setGradingMax(subjectRequest.getGradingMax());
         subject.setGrading5(subjectRequest.getGrading5());
         subject.setGrading4(subjectRequest.getGrading4());
@@ -142,27 +108,84 @@ public class SubjectService {
         subject.setPublicity(Publicity.valueOf(subjectRequest.getPublicity()));
 
         subject.setSearchString(searchStringService.getSearchString(subject));
-
         subject.setUser(user);
 
         subjectRepository.save(subject);
 
-        if(subjectCreation) {
-            progressProducer.sendCreateProgressEvent(
-                    subject.getId(),
-                    0.0, 0.0,
-                    subject.getGradingType(),
-                    subject.getEvaluationType(),
-                    subject.getTargetGrade(),
-                    subject.getGradingMax(),
-                    subject.getGrading5(),
-                    subject.getGrading4(),
-                    subject.getGrading3(),
-                    subject.getGradingMin()
+        progressProducer.sendCreateProgressEvent(
+                subject.getId(),
+                0.0, 0.0,
+                subject.getGradingType(),
+                subject.getEvaluationType(),
+                subject.getTargetGrade(),
+                subject.getGradingMax(),
+                subject.getGrading5(),
+                subject.getGrading4(),
+                subject.getGrading3(),
+                subject.getGradingMin()
+        );
+
+        return subject.getId();
+    }
+
+    @Transactional
+    public void update(long id, SubjectRequest subjectRequest) {
+
+        long userId = sessionService.getCurrentUserId();
+
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
+
+        if (subject.getUser().getId() != userId) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
+        }
+
+        subject.setName(subjectRequest.getName());
+        subject.setTeacher(subjectRequest.getTeacher());
+        subject.setDescription(subjectRequest.getDescription());
+
+        if (!subject.getGradingType().toString().equals(subjectRequest.getGradingType())) {
+            progressProducer.sendUpdateGradingTypeEvent(id, GradingType.valueOf(subjectRequest.getGradingType()));
+        }
+        subject.setGradingType(GradingType.valueOf(subjectRequest.getGradingType()));
+
+        if (!subject.getEvaluationType().toString().equals(subjectRequest.getEvaluationType())) {
+            progressProducer.sendUpdateEvaluationTypeEvent(id, EvaluationType.valueOf(subjectRequest.getEvaluationType()));
+        }
+        subject.setEvaluationType(EvaluationType.valueOf(subjectRequest.getEvaluationType()));
+
+        if (subject.getTargetGrade() != subjectRequest.getTargetGrade()) {
+            progressProducer.sendUpdateTargetGradeEvent(id, subjectRequest.getTargetGrade());
+        }
+        subject.setTargetGrade(subjectRequest.getTargetGrade());
+
+        if (
+                subject.getGradingMax() != subjectRequest.getGradingMax() ||
+                        subject.getGrading5() != subjectRequest.getGrading5() ||
+                        subject.getGrading4() != subjectRequest.getGrading4() ||
+                        subject.getGrading3() != subjectRequest.getGrading3() ||
+                        subject.getGradingMin() != subjectRequest.getGradingMin()
+        ) {
+            progressProducer.sendUpdateGradingsEvent(
+                    id,
+                    subjectRequest.getGradingMax(),
+                    subjectRequest.getGrading5(),
+                    subjectRequest.getGrading4(),
+                    subjectRequest.getGrading3(),
+                    subjectRequest.getGradingMin()
             );
         }
 
-        return subject.getId();
+        subject.setGradingMax(subjectRequest.getGradingMax());
+        subject.setGrading5(subjectRequest.getGrading5());
+        subject.setGrading4(subjectRequest.getGrading4());
+        subject.setGrading3(subjectRequest.getGrading3());
+        subject.setGradingMin(subjectRequest.getGradingMin());
+
+        subject.setPublicity(Publicity.valueOf(subjectRequest.getPublicity()));
+        subject.setSearchString(searchStringService.getSearchString(subject));
+
+        subjectRepository.save(subject);
     }
 
     @Transactional

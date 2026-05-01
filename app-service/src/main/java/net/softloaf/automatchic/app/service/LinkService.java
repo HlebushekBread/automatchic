@@ -20,28 +20,45 @@ public class LinkService {
     private final SubjectRepository subjectRepository;
 
     @Transactional
-    public long save(LinkRequest linkRequest) {
-        Link link = (linkRequest.getId() != 0)
-                ? linkRepository.findById(linkRequest.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID ссылки"))
-                : new Link();
+    public long create(long subjectId, LinkRequest request) {
 
-        Subject subject = subjectRepository.findById(linkRequest.getSubjectId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID дисциплины"));
 
-        if (linkRequest.getId() == 0) {
-            if (linkRepository.countBySubjectId(subject.getId()) >= 10) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит ссылок");
-            }
-        } else if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на удаление");
+        if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
         }
 
-        link.setName(linkRequest.getName());
-        link.setFullLink(linkRequest.getFullLink());
+        if (linkRepository.countBySubjectId(subjectId) >= 10) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Достигнут лимит ссылок");
+        }
+
+        Link link = new Link();
+        link.setName(request.getName());
+        link.setFullLink(request.getFullLink());
         link.setSubject(subject);
 
         linkRepository.save(link);
 
         return link.getId();
+    }
+
+    @Transactional
+    public void update(long id, LinkRequest request) {
+
+        Link link = linkRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный ID ссылки"));
+
+        Subject subject = link.getSubject();
+
+        if (subject.getUser().getId() != sessionService.getCurrentUserId()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Нет прав на редактирование");
+        }
+
+        link.setName(request.getName());
+        link.setFullLink(request.getFullLink());
+
+        linkRepository.save(link);
     }
 
     @Transactional
