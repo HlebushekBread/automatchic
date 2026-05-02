@@ -25,18 +25,6 @@ public class ProgressQueryController {
     private final ProgressHistoryRepository progressHistoryRepository;
     private final ProgressQueryService progressQueryService;
 
-    @GetMapping("/db/{subjectId}")
-    public ResponseEntity<ProgressView> getDbSnapshot(@PathVariable Long subjectId) {
-        return progressViewRepository.findById(subjectId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/db/{subjectId}/history")
-    public List<ProgressHistoryEntry> getDbHistory(@PathVariable Long subjectId) {
-        return progressHistoryRepository.findAllBySubjectIdOrderByTimestampAsc(subjectId);
-    }
-
     @GetMapping("/{subjectId}/history")
     public List<ProgressSnapshotResponse> getHistory(@PathVariable Long subjectId) {
         return progressQueryService.buildTimeline(subjectId);

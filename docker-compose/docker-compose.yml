@@ -69,8 +69,6 @@ services:
     build:
       context: ..
       dockerfile: history-service/Dockerfile
-    ports:
-      - "1338:8080"
     environment:
       - HISTORY_DB_URL=jdbc:postgresql://history-postgres:5432/history
       - HISTORY_DB_USERNAME=${HISTORY_DB_USERNAME}

@@ -1,0 +1,15 @@
+net\softloaf\automatchic\app\dto\request\TaskRequest.class
+net\softloaf\automatchic\app\dto\request\SubjectRequest.class
+net\softloaf\automatchic\app\service\LinkService.class
+net\softloaf\automatchic\app\exception\GlobalExceptionHandler.class
+net\softloaf\automatchic\app\controller\AuthController.class
+net\softloaf\automatchic\app\controller\TaskController.class
+net\softloaf\automatchic\app\service\ProgressService$2.class
+net\softloaf\automatchic\app\service\ProgressService.class
+net\softloaf\automatchic\app\service\TaskService.class
+net\softloaf\automatchic\app\controller\SubjectController.class
+net\softloaf\automatchic\app\service\UserService.class
+net\softloaf\automatchic\app\service\ProgressService$1.class
+net\softloaf\automatchic\app\dto\request\LinkRequest.class
+net\softloaf\automatchic\app\service\SubjectService.class
+net\softloaf\automatchic\app\controller\ProgressController.class

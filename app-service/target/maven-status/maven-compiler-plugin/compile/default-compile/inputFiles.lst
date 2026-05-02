@@ -1,6 +1,7 @@
 C:\projects\automatchic\automatchic\app-service\src\main\java\net\softloaf\automatchic\app\AutomatchicApplication.java
 C:\projects\automatchic\automatchic\app-service\src\main\java\net\softloaf\automatchic\app\config\CacheConfig.java
 C:\projects\automatchic\automatchic\app-service\src\main\java\net\softloaf\automatchic\app\config\MetricsConfig.java
+C:\projects\automatchic\automatchic\app-service\src\main\java\net\softloaf\automatchic\app\config\OpenApiConfig.java
 C:\projects\automatchic\automatchic\app-service\src\main\java\net\softloaf\automatchic\app\config\RestClientsConfig.java
 C:\projects\automatchic\automatchic\app-service\src\main\java\net\softloaf\automatchic\app\config\SecurityConfig.java
 C:\projects\automatchic\automatchic\app-service\src\main\java\net\softloaf\automatchic\app\controller\AuthController.java

@@ -1,0 +1,9 @@
+net\softloaf\automatchic\history\query\repository\ProgressHistoryRepository.class
+net\softloaf\automatchic\history\query\model\ProgressView.class
+net\softloaf\automatchic\history\query\model\ProgressHistoryEntry$ProgressHistoryEntryBuilder.class
+net\softloaf\automatchic\history\command\service\ProgressCommandConsumer.class
+net\softloaf\automatchic\history\query\controller\ProgressQueryController.class
+net\softloaf\automatchic\history\query\service\ProgressQueryService.class
+net\softloaf\automatchic\history\query\model\ProgressHistoryEntry.class
+net\softloaf\automatchic\history\query\repository\ProgressViewRepository.class
+net\softloaf\automatchic\history\command\service\ProgressCommandConsumer$1.class
